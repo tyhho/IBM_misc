@@ -7,10 +7,8 @@ Created on Thu Feb  7 20:29:14 2019
 
 import os
 from matplotlib import pyplot as plt
-import pandas as pd
 import seaborn as sns
 import numpy as np
-from FlowCytometryTools import FCPlate
 
 try:
     import cPickle as pickle
