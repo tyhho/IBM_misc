@@ -93,7 +93,8 @@ for file in os.listdir(folderDir):
                 'dna_ss_minus1': dna_ss_minus1,
                 'dna_ss_plus1':  dna_ss_minus1 + 1,
                 'aa_ss_minus1': dna_ss_minus1 / 3,
-                'aa_ss_plus1': dna_ss_minus1 / 3 + 1        
+                'aa_ss_plus1': dna_ss_minus1 / 3 + 1,
+                'aa_ss_middle':  dna_ss_minus1 / 3 +0.5 # for graph plotting in the future
                 }
         
         ss_dfRow = pd.DataFrame(ss_data,index=[strainID])
