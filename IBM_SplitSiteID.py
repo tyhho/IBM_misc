@@ -66,23 +66,31 @@ for file in os.listdir(folderDir):
         aligner.open_gap_score = -10
         aligner.extend_gap_score = -1
         
+        # Reset information to be written
+        dna_ss_minus1 = 'n/a'
+        dna_ss_plus1 = 'n/a'
+        aa_ss_minus1 = 'n/a'
+        aa_ss_plus1 = 'n/a'
+        aa_ss_middle = 'n/a'
+
         # Perform local alignment between the sequencing result and the signature sequence
         alignment = aligner.align(record.seq,signature_sequence)
         # Locate the indices where the signature sequence was aligned to
-        sig_start,sig_end = alignment[0].path[0][0], alignment[0].path[1][0]    
-        # Extract the bp that would correspond to the target CDS
-        ex_seq = record.seq[sig_end:]   # Note: no need to +1 here because the indexing of strings starts from 0
-        
-        # Perform local alignment between the extracted sequence and the target CDS sequence
-        targetCDS = Seq(targetCDS_sequence) # import the targetCDS sequence as a Seq.Seq object
-        alignment = aligner.align(targetCDS,ex_seq)
-        # Locate the start index of where the extracted sequence was aligned to, i.e. ID the split site
-        dna_ss_minus1 = alignment[0].path[0][0] # Note: indexing of string starts from 0, so this becomes -1
-        
-        # Workout the rest of the split sites
-        dna_ss_plus1 = dna_ss_minus1 + 1
-        aa_ss_minus1 = dna_ss_minus1 / 3
-        aa_ss_plus1 = aa_ss_minus1 + 1
+        if alignment:   # problem: some sequences might not give any proper alignment
+            sig_start,sig_end = alignment[0].path[0][0], alignment[0].path[1][0]    
+            # Extract the bp that would correspond to the target CDS
+            ex_seq = record.seq[sig_end:]   # Note: no need to +1 here because the indexing of strings starts from 0
+            # Perform local alignment between the extracted sequence and the target CDS sequence
+            targetCDS = Seq(targetCDS_sequence) # import the targetCDS sequence as a Seq.Seq object
+            alignment = aligner.align(targetCDS,ex_seq)
+            # Locate the start index of where the extracted sequence was aligned to, i.e. ID the split site
+            if alignment:   # problem: a poor alignemnt of signature sequence might return abberent alignment at this stage as well
+                dna_ss_minus1 = alignment[0].path[0][0] # Note: indexing of string starts from 0, so this becomes -1
+                # Workout the rest of the split sites
+                dna_ss_plus1 = dna_ss_minus1 + 1
+                aa_ss_minus1 = dna_ss_minus1 / 3
+                aa_ss_plus1 = aa_ss_minus1 + 1
+                aa_ss_middle = aa_ss_minus1 + 0.5
         
         # Create a dictionary for import into pandas dataframe
         ss_data = {
@@ -91,16 +99,16 @@ for file in os.listdir(folderDir):
                 'raw_seq': record.seq._data, # raw sequence
                 'read_length': len(record.seq), # length of the sequence
                 'dna_ss_minus1': dna_ss_minus1,
-                'dna_ss_plus1':  dna_ss_minus1 + 1,
-                'aa_ss_minus1': dna_ss_minus1 / 3,
-                'aa_ss_plus1': dna_ss_minus1 / 3 + 1,
-                'aa_ss_middle':  dna_ss_minus1 / 3 +0.5 # for graph plotting in the future
+                'dna_ss_plus1':  dna_ss_plus1,
+                'aa_ss_minus1': aa_ss_minus1,
+                'aa_ss_plus1': aa_ss_plus1,
+                'aa_ss_middle':  aa_ss_middle # for graph plotting in the future
                 }
         
         ss_dfRow = pd.DataFrame(ss_data,index=[strainID])
         ss_output = ss_output.append(ss_dfRow, sort=True)
 #%% Export output to file
-outputFilename = 'BM004_SplitSitesIDed.csv'
+outputFilename = 'BM004_IdentifiedSplitSites.csv'
 outputDir = os.path.join(folderDir,outputFilename)
 ss_output.to_csv(outputDir)
 
