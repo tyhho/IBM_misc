@@ -9,7 +9,7 @@ that contains information on corrected OD600, corrected red fluorescence
 and corrected fluorescence/OD600, it also adds metadata to the file regarding
 the Run number, the SampleID and the condition
 
-This script is tailored for FC013
+This script is tailored for FC014 Run 1
 """
 
 import os
@@ -24,8 +24,10 @@ def renameIndex(indexStr=str):
     # file for metadata must be in this folder
 
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC013'
-metafilename = 'FC013_PRPlateMetadata.xlsx'
+dataFolderDir='FC014'
+metafilename = 'IBM_FC014R1_PRPlateMetadata.xlsx'
+
+outputCSV = 'IBM_FC014R1_PRData.csv'
 
 
 #%% Since there is only a single metafile in this experiment
@@ -82,9 +84,9 @@ for file in os.listdir(folderDir):
          data['Run'] = run_no
          data['Post-induction (hrs)'] = ind_time
          if ind_cond_code == '1':
-             data['Induction'] = '1mM arabinose'
+             data['Induction'] = '1 mM arabinose'
          elif ind_cond_code == '2':
-             data['Induction'] = '1mM arabinose + 0.1 mM caffeine'
+             data['Induction'] = '1 mM arabinose + 0.1 mM caffeine'
          else:
              data['Induction'] = 'error'
          
@@ -92,8 +94,8 @@ for file in os.listdir(folderDir):
          for meta_property, metadf_96format in metadata.items():
              data = data.merge(metadf,left_index=True,right_index=True)
         
-         # Remove data of the blank well 'E1'
-         data = data.drop('E1',axis=0)
+         # Remove data of the blank well 'H12'
+         data = data.drop('H12',axis=0)
          data['PR_Well'] = data.index
          alldata = alldata.append(data,ignore_index=True,sort=None)
 
@@ -142,6 +144,5 @@ for file in os.listdir(folderDir):
 #
     
 # Save file as CSV
-outputCSV = 'FC013R1-3_PRData.csv'
 csvDir = os.path.join(folderDir,outputCSV)
 alldata.to_csv(csvDir,header=True)
