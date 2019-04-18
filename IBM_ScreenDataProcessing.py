@@ -14,30 +14,30 @@ def renameIndex(indexStr=str):
     indexStr = indexStr[0] + str(int(indexStr[1:3]))
     return indexStr
 
-# Specify folder location
+#TODO: Specify directories for input and output data
     # all csv files that contain df data of fluorescence with inducer conc must be in this folder
     # this is also the folder where the output will be deposited
-dataRootDir = r'W:\Data storage & Projects\PhD Project_Yiyu\Transposase Project'
+dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir = 'BM004'
-dataFolder2Dir = 'Screen1'
-fNCons = 'PR_'
+dataFolder2Dir = 'Screen4'
+outputCSV = 'BM004_Screen4_pooledData.csv'
 
-# Provide excel file to look for control data
-ctrlExcelFN = 'PR_BM004_Screen1_Control.xlsx'
+#TODO: Provide excel file to look for control data
+ctrlExcelFN = 'PR_BM004_Screen4_PI24_Blank.xlsx'
 ctrlDir = os.path.join(dataRootDir, dataFolderDir,dataFolder2Dir,ctrlExcelFN)
 ctrlData = pd.read_excel(ctrlDir,sheet_name = 'End point',index_col=0,skiprows=12)
-# Extract blank OD and blank fluorescence for subtraction
+#TODO: Provide the well location of the blank
 blankOD = ctrlData.iloc[0][1]
 blankFluo = ctrlData.iloc[0][2]
 
 
 #%%
 # Create dict for handling multiple files at once
-filenameCoreList = {'BM004_Screen1_P': ['1','2','3','4','5','6']
+filenameCoreList = {'PR_BM004_Screen4_PI24_': ['1']
                     }
 
 # Create list for induction OFF & ON states
-inductionList = ['+']
+inductionList = ['-','+']
 
 
 for fNVar, plateList in filenameCoreList.items():
@@ -46,7 +46,7 @@ for fNVar, plateList in filenameCoreList.items():
         plateData = pd.DataFrame(columns=['ID','Plate','Well','+C OD','+C Fluo'])
         
         for indCon in inductionList:
-            excelFN = fNCons + fNVar + plateNo + indCon + '.xlsx'
+            excelFN = fNVar + plateNo + indCon + '.xlsx'
             dataDir = os.path.join(dataRootDir, dataFolderDir,dataFolder2Dir,excelFN)
             data = pd.read_excel(dataDir,sheet_name = 'End point',skiprows=12)
             data = data.drop(['Content'], axis=1)
@@ -71,14 +71,13 @@ for fNVar, plateList in filenameCoreList.items():
             plateData['ID'] = ( int(plateNo) -1 ) * 96 + np.linspace(1,96,96)
    
         mergedData = mergedData.append(plateData,ignore_index=False,sort=False)
-        #mergedData['-C Fluo/OD'] =  mergedData['-C Fluo']/mergedData['-C OD']
+        mergedData['-C Fluo/OD'] =  mergedData['-C Fluo']/mergedData['-C OD']
         mergedData['+C Fluo/OD'] =  mergedData['+C Fluo']/mergedData['+C OD']
-#        mergedData['IndFoldChange'] = mergedData.apply(lambda mergedData :mergedData['+C Fluo/OD']/mergedData['-C Fluo/OD'] if mergedData['-C Fluo/OD']!=0 else np.nan,axis=1) 
+        mergedData['IndFoldChange'] = mergedData.apply(lambda mergedData :mergedData['+C Fluo/OD']/mergedData['-C Fluo/OD'] if mergedData['-C Fluo/OD']!=0 else np.nan,axis=1) 
 
 
 mergedData = mergedData.sort_values(by=['+C Fluo/OD'],ascending=False)
         
 # Export Data File, one for each induction time point
-outputCSV = 'BM004_Screen1_pooledData.csv'
 csvDir = os.path.join(dataRootDir,dataFolderDir,dataFolder2Dir,outputCSV)
 mergedData.to_csv(csvDir,header=True)

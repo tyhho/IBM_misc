@@ -108,7 +108,7 @@ for file in os.listdir(folderDir):
         ss_dfRow = pd.DataFrame(ss_data,index=[strainID])
         ss_output = ss_output.append(ss_dfRow, sort=True)
 #%% Export output to file
-outputFilename = 'BM004_IdentifiedSplitSites.csv'
+outputFilename = 'IBM_BM004_IdentifiedSplitSites.csv'
 outputDir = os.path.join(folderDir,outputFilename)
 ss_output.to_csv(outputDir)
 
