@@ -23,16 +23,20 @@ def fcsNameParser(string=str):
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC013'
+dataFolderDir = 'FC014'
+
+# TODO: Specify the source of plate reader data to merge with flow cytometry data
+pr_data_filename = 'IBM_FC014R1_PRData.csv'
+
+# TODO: Specify the output filename for the combined data
+all_doi_filename = 'IBM_FC014R1_FCmedian&metadata&PRData.csv'
 
 # TODO: Specify subfolders containing FCS files
 # Create dict with information of FCS folder name (key) and also Metadata file (value)
-plateList = {'IBM_FC013R1PI5':'FC013_FCPlateMetadata',
-             'IBM_FC013R1PI24':'FC013_FCPlateMetadata',
-             'IBM_FC013R2PI5':'FC013_FCPlateMetadata',
-             'IBM_FC013R2PI24':'FC013_FCPlateMetadata',
-             'IBM_FC013R3PI5':'FC013_FCPlateMetadata',
-             'IBM_FC013R3PI24':'FC013_FCPlateMetadata'
+plateList = {'IBM_FC014R1PI5P1':'IBM_FC014R1P1_FCPlateMetadata',
+             'IBM_FC014R1PI5P2':'IBM_FC014R1P2_FCPlateMetadata',
+             'IBM_FC014R1PI24P1':'IBM_FC014R1P1_FCPlateMetadata',
+             'IBM_FC014R1PI24P2':'IBM_FC014R1P2_FCPlateMetadata'
              }
 
 #%% Core Processing Codes
@@ -92,7 +96,7 @@ for plateNameCore,metadataNameCore in plateList.items():
     # Create df from data of interest
     doi_df = pd.DataFrame.from_dict(doi_dict,orient='index',columns=['median fluorescence (a.u.)','Count'])
     doi_df['Run'] = int(plateNameCore.split('R')[1].split('PI')[0])  # add run number to df
-    doi_df['Post-induction (hrs)'] = int(plateNameCore.split('PI')[1])
+    doi_df['Post-induction (hrs)'] = int(plateNameCore.split('PI')[1].split('P')[0])
     
     # Process the df of metadata & merge into the main dataframe
     for meta_property, metadf_96format in metadata.items():
@@ -117,11 +121,9 @@ for plateNameCore,metadataNameCore in plateList.items():
     
     #%%
 # Merge all data from plate reader into cytometer
-pr_data_filename = 'FC013R1-3_PRData.csv'
 pr_data_dir = os.path.join(dataRootDir,dataFolderDir,pr_data_filename)
 all_pr_data = pd.read_csv(pr_data_dir,index_col=0)
 final_all_doi_df = all_doi_df.merge(all_pr_data)
 
-all_doi_filename = 'FC013R1-3_FCmedian&metadata&PRData.csv'
 all_doi_dir = os.path.join(dataRootDir,dataFolderDir,all_doi_filename)
 final_all_doi_df.to_csv(all_doi_dir)
