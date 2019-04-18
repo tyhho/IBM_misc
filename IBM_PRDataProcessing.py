@@ -10,6 +10,11 @@ and corrected fluorescence/OD600, it also adds metadata to the file regarding
 the Run number, the SampleID and the condition
 
 This script is tailored for FC014 Run 1
+
+It should be noted that this way of processing is not sustainable because the
+conditions of the plates will only get more and more complex. Needs to rework
+the code to generate something that automatically match plate number and 
+plate metadata file.
 """
 
 import os
@@ -20,13 +25,11 @@ def renameIndex(indexStr=str):
     indexStr = indexStr[0] + str(int(indexStr[1:3]))
     return indexStr
 
-# Specify folder location
-    # file for metadata must be in this folder
-
+# TODO: Specify folder location
+# TODO: Prepare file of metadata
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir='FC014'
 metafilename = 'IBM_FC014R1_PRPlateMetadata.xlsx'
-
 outputCSV = 'IBM_FC014R1_PRData.csv'
 
 
@@ -94,6 +97,7 @@ for file in os.listdir(folderDir):
          for meta_property, metadf_96format in metadata.items():
              data = data.merge(metadf,left_index=True,right_index=True)
         
+        # TODO: Check the row of blank that should be removed
          # Remove data of the blank well 'H12'
          data = data.drop('H12',axis=0)
          data['PR_Well'] = data.index
