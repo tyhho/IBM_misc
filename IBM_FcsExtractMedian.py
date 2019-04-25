@@ -26,17 +26,21 @@ dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assist
 dataFolderDir = 'FC014'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC014R1_PRData.csv'
+pr_data_filename = 'IBM_FC014R2-4_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC014R1_FCmedian&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC014R2-4_FCmedian&metadata&PRData.csv'
 
 # TODO: Specify subfolders containing FCS files
 # Create dict with information of FCS folder name (key) and also Metadata file (value)
-plateList = {'IBM_FC014R1PI5P1':'IBM_FC014R1P1_FCPlateMetadata',
-             'IBM_FC014R1PI5P2':'IBM_FC014R1P2_FCPlateMetadata',
-             'IBM_FC014R1PI24P1':'IBM_FC014R1P1_FCPlateMetadata',
-             'IBM_FC014R1PI24P2':'IBM_FC014R1P2_FCPlateMetadata'
+
+# TODO: In the future, this needs to be done automatically
+plateList = {'IBM_FC014R2PI5':'FCMD_IBM_FC014R2',
+             'IBM_FC014R2PI24':'FCMD_IBM_FC014R2',
+             'IBM_FC014R3PI5':'FCMD_IBM_FC014R2',
+             'IBM_FC014R3PI24':'FCMD_IBM_FC014R2',
+             'IBM_FC014R4PI5':'FCMD_IBM_FC014R2',
+             'IBM_FC014R4PI24':'FCMD_IBM_FC014R2'
              }
 
 #%% Core Processing Codes
