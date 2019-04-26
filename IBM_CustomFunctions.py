@@ -11,6 +11,13 @@ Provides Custom Functions to commonly uesd scripts in IBM
 import pandas as pd
 
 
+''' Parser Function for FlowCytometryTools '''
+def fcsNameParser(string=str):
+        splitFN = string.split('Experiment_Group_')
+        splitFN2 = splitFN[1].split('.fcs')
+        return splitFN2[0]
+
+
 '''Read a single metadata file and convert it into a dictionary of metadata for 96 well plate'''
 
 def metadata_to_metaDict(metadataDir):
