@@ -13,12 +13,7 @@ import os
 from FlowCytometryTools.core.gates import CompositeGate
 from FlowCytometryTools import FCPlate, ThresholdGate
 import pandas as pd
-
-# Parser Function for FlowCytometryTools
-def fcsNameParser(string=str):
-        splitFN = string.split('Experiment_Group_')
-        splitFN2 = splitFN[1].split('.fcs')
-        return splitFN2[0]
+import IBM_CustomFunctions as cf
 
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
@@ -57,7 +52,7 @@ for plateNameCore,metadataNameCore in plateList.items():
     #plateNameCore = '' #for debugging
     fcsFolderDir = plateNameCore + '_FCS'
     datadir = os.path.join(dataRootDir,dataFolderDir,fcsFolderDir)
-    plate = FCPlate.from_dir(ID='Plate', path=datadir, parser=fcsNameParser, position_mapper='name')
+    plate = FCPlate.from_dir(ID='Plate', path=datadir, parser=cf.fcsNameParser, position_mapper='name')
     
     # Gating
     fsc_gate = ThresholdGate(1000.0, ['FSC-H'], region='above')
