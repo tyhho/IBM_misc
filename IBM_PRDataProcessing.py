@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """
 Created on Thu Mar 28 17:56:09 2019
 
@@ -19,12 +20,12 @@ import IBM_CustomFunctions as cf
 
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC014'
+dataFolderDir='FC016'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
-metafilename = 'PRMD_IBM_FC014R2.xlsx'
-outputCSV = 'IBM_FC014R2-4_PRData.csv'
+metafilename = 'PRMD_IBM_FC016R2.xlsx'
+outputCSV = 'IBM_FC016R2_PRData.csv'
 
 # Read PR Metadata Excelfile
 metadataDir = os.path.join(dataRootDir,dataFolderDir,metafilename)
@@ -44,9 +45,7 @@ Strategy:
 '''
 
 keylist = [
-        'FC014R2',
-        'FC014R3',
-        'FC014R4'
+        'FC016R2'        
            ]
 
 for file in os.listdir(folderDir):
@@ -139,4 +138,4 @@ for file in os.listdir(folderDir):
     
 # Save file as CSV
 csvDir = os.path.join(folderDir,outputCSV)
-alldata.to_csv(csvDir,header=True)
+alldata.to_csv(csvDir,header=True,encoding='utf-8')
