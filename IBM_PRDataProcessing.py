@@ -25,7 +25,7 @@ dataFolderDir='FC015'
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
 metafilename = 'PRMD_IBM_FC015.xlsx'
-outputCSV = 'IBM_FC015R1_PRData.csv'
+outputCSV = 'IBM_FC015R1PI5+18_PRData.csv'
 
 # Read PR Metadata Excelfile
 metadataDir = os.path.join(dataRootDir,dataFolderDir,metafilename)
@@ -45,7 +45,7 @@ Strategy:
 '''
 
 keylist = [
-        'FC015R1'        
+        'FC015R1PI5+18'        
            ]
 
 for file in os.listdir(folderDir):
