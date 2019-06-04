@@ -20,12 +20,12 @@ import IBM_CustomFunctions as cf
 
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC017'
+dataFolderDir='FC015'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
-metafilename = 'PRMD_IBM_FC017.xlsx'
-outputCSV = 'IBM_FC017R2_PRData.csv'
+metafilename = 'PRMD_IBM_FC015.xlsx'
+outputCSV = 'IBM_FC015R1_PRData.csv'
 
 # Read PR Metadata Excelfile
 metadataDir = os.path.join(dataRootDir,dataFolderDir,metafilename)
@@ -45,7 +45,7 @@ Strategy:
 '''
 
 keylist = [
-        'FC017R2'        
+        'FC015R1'        
            ]
 
 for file in os.listdir(folderDir):
@@ -71,9 +71,9 @@ for file in os.listdir(folderDir):
          if filename.find('PI')>=0:
              ind_time_frag = filename.split('PI')[1]
              if ind_time_frag.find('P') >=0:
-                 ind_time, plate_no = int(ind_time_frag.split('P')[0]), int(ind_time_frag.split('P')[1])
+                 ind_time, plate_no = ind_time_frag.split('P')[0], ind_time_frag.split('P')[1]
              else:
-                 ind_time = int(ind_time_frag)
+                 ind_time = ind_time_frag
          elif filename.find('P') >=0:
              plate_no = int(filename.split('P')[1])
          
@@ -82,6 +82,7 @@ for file in os.listdir(folderDir):
                               'Blank corrected based on Raw Data (584 2)': 'PR_Corrected Fluo (a.u.)',
                               'RF/OD600': 'PR_Corrected Red Fluo/OD600 (a.u.)'}, inplace=True)
          data['Run'] = run_no
+#         ind_time = int(ind_time)   #comment out in case induction time needs to be a special string instead of interger
          data['Post-induction (hrs)'] = ind_time
          data = data.merge(metadata_df,left_index=True,right_index=True)
          
