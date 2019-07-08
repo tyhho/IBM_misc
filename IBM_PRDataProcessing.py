@@ -102,6 +102,9 @@ for fnSearchSeq, metaInfo in fileList.items():
         data = pd.read_excel(dataDir,sheet_name = 'End point',index_col=0,skiprows=12)
         data = data.drop(['Content'], axis=1)
         
+        # Update the index so it matches the conventional nomenclature
+        data = cf.renameDfWellIndex(data)
+        
         # Handle blanks 
         if useBlankInSelf == True:
             # Drop raw data that did not receive blank correction
@@ -120,7 +123,9 @@ for fnSearchSeq, metaInfo in fileList.items():
             # Rename cols
             data.rename(columns={'Raw Data (600 1)': 'PR_Corrected OD600',
                                  'Raw Data (584 2)': 'PR_Corrected Red Fluorescence (a.u.)'}, inplace=True)
-            
+            # Drop any possible remaining blank data
+            if from_meta_blank_list:
+                data = data.drop(from_meta_blank_list,axis=0)
         
         # Add extra metadata based on info in filename
         # Extract information from filename
@@ -145,9 +150,6 @@ for fnSearchSeq, metaInfo in fileList.items():
         data['Run'] = run_no
         data['Post-induction (hrs)'] = ind_time
         data['PR_Plate'] = plate_no
-        
-        # Update the index so it matches the conventional nomenclature
-        data = cf.renameDfWellIndex(data)
 
         # Append metadata
         data = data.merge(metadata_df,left_index=True,right_index=True)

@@ -18,19 +18,22 @@ import IBM_CustomFunctions as cf
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC015'
+dataFolderDir = 'FC018'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC015R1PI5+18_PRData.csv'
+pr_data_filename = 'IBM_FC018R3_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC015R1PI5+18_FCmedian&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC018R3_FCmedian&metadata&PRData.csv'
 
 # TODO: Specify subfolders containing FCS files
 # Create dict with information of FCS folder name (key) and also Metadata file (value)
 
 # TODO: In the future, this needs to be done automatically
-plateList = {'IBM_FC015R1PI5+18':'FCMD_IBM_FC015',
+plateList = {'IBM_FC018R3PI5P1':'FCMD_IBM_FC018P1',
+             'IBM_FC018R3PI5P2':'PRMD_IBM_FC018P2',
+             'IBM_FC018R3PI5P3':'PRMD_IBM_FC018P3',
+             'IBM_FC018R3PI5P4':'PRMD_IBM_FC018P4'
              }
 
 #%% Core Processing Codes
@@ -90,11 +93,15 @@ for plateNameCore,metadataNameCore in plateList.items():
     # Create df from data of interest
     doi_df = pd.DataFrame.from_dict(doi_dict,orient='index',columns=['median fluorescence (a.u.)','Count'])
     doi_df['Run'] = int(plateNameCore.split('R')[1].split('PI')[0])  # add run number to df
-    
-    #wrapper to convert to integer, remove int() wrapper if necessary
-    # TODO: add back wrapper for next experiment
     post_induction_time = plateNameCore.split('PI')[1] .split('P')[0]
-    doi_df['Post-induction (hrs)'] = post_induction_time
+    
+    # In the event that post_induction_time is not an integer
+    try:
+        doi_df['Post-induction (hrs)'] = int(post_induction_time)
+    except ValueError:
+        doi_df['Post-induction (hrs)'] = post_induction_time
+    
+    # TODO: need to add method to add FC_Plate number to dataset
     
     # Process the df of metadata & merge into the main dataframe
     for meta_property, metadf_96format in metadata.items():
