@@ -48,10 +48,10 @@ allFiles = os.listdir(folderDir)
         # c. a customized list of [filename, well] that specifies where the blank should be looked up
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC018R3*P1.xlsx': ['PRMD_IBM_FC018R3P1.xlsx', master_blank_info],
-            'PR_IBM_FC018R3*P2.xlsx': ['PRMD_IBM_FC018R3P2.xlsx', master_blank_info],
-            'PR_IBM_FC018R3*P3.xlsx': ['PRMD_IBM_FC018R3P3.xlsx', master_blank_info],
-            'PR_IBM_FC018R3*P4.xlsx': ['PRMD_IBM_FC018R3P4.xlsx', master_blank_info],
+fileList = {'PR_IBM_FC018R3*P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', master_blank_info],
+            'PR_IBM_FC018R3*P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', master_blank_info],
+            'PR_IBM_FC018R3*P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', master_blank_info],
+            'PR_IBM_FC018R3*P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', master_blank_info],
                     }
 
 # Process data (median fluorescence) from 96 well plate format into Seaborn-friendly format
