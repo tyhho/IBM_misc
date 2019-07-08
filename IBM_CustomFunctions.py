@@ -10,17 +10,15 @@ Provides Custom Functions to commonly uesd scripts in IBM
 
 import pandas as pd
 
-
-''' Parser Function for FlowCytometryTools '''
 def fcsNameParser(string=str):
-        splitFN = string.split('Experiment_Group_')
-        splitFN2 = splitFN[1].split('.fcs')
-        return splitFN2[0]
-
-
-'''Read a single metadata file and convert it into a dictionary of metadata for 96 well plate'''
+    ''' Parser Function for FlowCytometryTools '''
+    splitFN = string.split('Experiment_Group_')
+    splitFN2 = splitFN[1].split('.fcs')
+    return splitFN2[0]
 
 def metadata_to_metaDict(metadataDir):
+
+    '''Read a single metadata file and convert it into a dictionary of metadata for 96 well plate'''
 
     metaxls= pd.ExcelFile(metadataDir)
     dict_of_metadata = {sheet:metaxls.parse(sheet) for sheet in metaxls.sheet_names}
@@ -47,9 +45,10 @@ def metadata_to_metaDict(metadataDir):
 
     return dict_of_metadata
 
-'''Read a single metadata file and convert it into a dataframe for merging'''
-
 def metadata_to_metadf(metadataDir):
+
+    '''Read a single metadata file and convert it into a dataframe for merging'''
+    
     dict_of_metadata = metadata_to_metaDict(metadataDir)
     meta_df_list = list(dict_of_metadata.values())
     all_meta_df = meta_df_list[0]
@@ -58,16 +57,14 @@ def metadata_to_metadf(metadataDir):
         all_meta_df = all_meta_df.merge(meta_df,left_index=True,right_index=True,sort=False)
     return all_meta_df
 
-
-'''Rename index in a dataframe from plate reader exported Excel file to normal well index (e.g 'A01' to 'A1')'''
-# Note: only take df as input
-
 def renameDfWellIndex(data):
-     indexList = data.index.tolist()
-     for n, ind in enumerate(indexList):
-         indexList[n]= ind[0] + str(int(ind[1:3]))
-     data.set_index(pd.Index(indexList),inplace=True)
-     return data
+    '''Rename index in a dataframe from plate reader exported Excel file to normal well index (e.g 'A01' to 'A1')'''
+    # Note: only take df as input
+    indexList = data.index.tolist()
+    for n, ind in enumerate(indexList):
+        indexList[n]= ind[0] + str(int(ind[1:3]))
+    data.set_index(pd.Index(indexList),inplace=True)
+    return data
 
 #%% Rename files
 #
