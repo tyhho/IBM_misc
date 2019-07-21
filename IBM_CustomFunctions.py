@@ -21,7 +21,7 @@ def metadata_to_metaDict(metadataDir):
     '''Read a single metadata file and convert it into a dictionary of metadata for 96 well plate'''
 
     metaxls= pd.ExcelFile(metadataDir)
-    dict_of_metadata = {sheet:metaxls.parse(sheet) for sheet in metaxls.sheet_names}
+    dict_of_metadata = {sheet:metaxls.parse(sheet,index_col=0) for sheet in metaxls.sheet_names}
     
     # Process the df of metadata & create a metadata dictionary
         # Key = metadata field
