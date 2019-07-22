@@ -22,7 +22,7 @@ import fnmatch
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir='FC018'
-outputCSV = 'IBM_FC018R3_PRData.csv'
+outputCSV = 'IBM_FC018R5-7_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
@@ -48,10 +48,30 @@ allFiles = os.listdir(folderDir)
         # c. a customized list of [filename, well] that specifies where the blank should be looked up
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC018R3*P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', master_blank_info],
-            'PR_IBM_FC018R3*P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', master_blank_info],
-            'PR_IBM_FC018R3*P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', master_blank_info],
-            'PR_IBM_FC018R3*P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', master_blank_info],
+fileList = {'PR_IBM_FC018R5PI5P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R5PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R5PI5P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R5PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R5PI5P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R5PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R5PI5P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R5PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R5PI24P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R5PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R5PI24P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R5PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R5PI24P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R5PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R5PI24P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R5PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R6PI5P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R6PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R6PI5P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R6PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R6PI5P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R6PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R6PI5P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R6PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R6PI24P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R6PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R6PI24P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R6PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R6PI24P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R6PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R6PI24P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R6PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R7PI5P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R7PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R7PI5P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R7PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R7PI5P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R7PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R7PI5P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R7PI5P1.xlsx','A01']],
+            'PR_IBM_FC018R7PI24P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R7PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R7PI24P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R7PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R7PI24P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R7PI24P1.xlsx','A01']],
+            'PR_IBM_FC018R7PI24P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R7PI24P1.xlsx','A01']],
                     }
 
 # Process data (median fluorescence) from 96 well plate format into Seaborn-friendly format
@@ -71,7 +91,7 @@ for fnSearchSeq, metaInfo in fileList.items():
     try:
         blankInfo = metaInfo[1]
         # check if blankInfo was provided but given in wrong format
-        if type(blankInfo) is not list or len(blankInfo) is not 2:
+        if type(blankInfo) != list or len(blankInfo) != 2:
             raise ValueError('Blank Info should be a list with 1st item as filename and 2nd item as well location')
 
         blankFN = blankInfo[0] # extract filename containing blank

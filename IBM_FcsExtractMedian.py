@@ -21,19 +21,39 @@ dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assist
 dataFolderDir = 'FC018'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC018R3_PRData.csv'
+pr_data_filename = 'IBM_FC018R5-7_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC018R3_FCmedian&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC018R5-7_FCmedian&metadata&PRData.csv'
 
 # TODO: Specify subfolders containing FCS files
 # Create dict with information of FCS folder name (key) and also Metadata file (value)
 
 # TODO: In the future, this needs to be done automatically
-plateList = {'IBM_FC018R3PI5P1':'FCMD_IBM_FC018P1',
-             'IBM_FC018R3PI5P2':'PRMD_IBM_FC018P2',
-             'IBM_FC018R3PI5P3':'PRMD_IBM_FC018P3',
-             'IBM_FC018R3PI5P4':'PRMD_IBM_FC018P4'
+plateList = {'IBM_FC018R5PI5P1':'FCMD_IBM_FC018P1',
+             'IBM_FC018R5PI5P2':'PRMD_IBM_FC018P2',
+             'IBM_FC018R5PI5P3':'PRMD_IBM_FC018P3',
+             'IBM_FC018R5PI5P4':'PRMD_IBM_FC018P4',
+             'IBM_FC018R5PI5P1':'FCMD_IBM_FC018P1',
+             'IBM_FC018R5PI24P2':'PRMD_IBM_FC018P2',
+             'IBM_FC018R5PI24P3':'PRMD_IBM_FC018P3',
+             'IBM_FC018R5PI24P4':'PRMD_IBM_FC018P4',
+             'IBM_FC018R6PI5P1':'FCMD_IBM_FC018P1',
+             'IBM_FC018R6PI5P2':'PRMD_IBM_FC018P2',
+             'IBM_FC018R6PI5P3':'PRMD_IBM_FC018P3',
+             'IBM_FC018R6PI5P4':'PRMD_IBM_FC018P4',
+             'IBM_FC018R6PI5P1':'FCMD_IBM_FC018P1',
+             'IBM_FC018R6PI24P2':'PRMD_IBM_FC018P2',
+             'IBM_FC018R6PI24P3':'PRMD_IBM_FC018P3',
+             'IBM_FC018R6PI24P4':'PRMD_IBM_FC018P4',
+             'IBM_FC018R7PI5P1':'FCMD_IBM_FC018P1',
+             'IBM_FC018R7PI5P2':'PRMD_IBM_FC018P2',
+             'IBM_FC018R7PI5P3':'PRMD_IBM_FC018P3',
+             'IBM_FC018R7PI5P4':'PRMD_IBM_FC018P4',
+             'IBM_FC018R7PI5P1':'FCMD_IBM_FC018P1',
+             'IBM_FC018R7PI24P2':'PRMD_IBM_FC018P2',
+             'IBM_FC018R7PI24P3':'PRMD_IBM_FC018P3',
+             'IBM_FC018R7PI24P4':'PRMD_IBM_FC018P4'
              }
 
 #%% Core Processing Codes
@@ -45,7 +65,7 @@ for plateNameCore,metadataNameCore in plateList.items():
     metafilename = metadataNameCore + '.xlsx'
     metadataDir = os.path.join(dataRootDir,dataFolderDir,metafilename)
     metaxls= pd.ExcelFile(metadataDir)
-    metadata = {sheet:metaxls.parse(sheet) for sheet in metaxls.sheet_names}    #import all sheets in metadata file into a dict, property name=keys, metadata df = values
+    metadata = {sheet:metaxls.parse(sheet, index_col=0) for sheet in metaxls.sheet_names}    #import all sheets in metadata file into a dict, property name=keys, metadata df = values
     
     #plateNameCore = '' #for debugging
     fcsFolderDir = plateNameCore + '_FCS'
