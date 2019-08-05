@@ -20,16 +20,16 @@ def renameIndex(indexStr=str):
     # this is also the folder where the output will be deposited
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir = 'BM005'
-dataFolder2Dir = 'Screen1'
-outputCSV = 'BM005_Screen1_pooledData.csv'
+dataFolder2Dir = 'Screen2'
+outputCSV = 'BM005_Screen2_pooledData.csv'
 
 #%%
 # Create dict for handling multiple files at once
-filenameCoreList = {'PR_BM005_Screen1_PI18_': ['P1','P2']
+filenameCoreList = {'PR_BM005_Screen2_PI18_': ['1','2']
                     }
 
 # Create list for induction OFF & ON states
-inductionList = ['-','+']
+inductionList = ['--','+-','-+','++']
 
 
 for fNVar, plateList in filenameCoreList.items():
@@ -39,7 +39,7 @@ for fNVar, plateList in filenameCoreList.items():
         
         for indCon in inductionList:
             
-            excelFN = fNVar + plateNo + indCon + '.xlsx'
+            excelFN = fNVar + 'P' + plateNo + indCon + '.xlsx'
             dataDir = os.path.join(dataRootDir, dataFolderDir,dataFolder2Dir,excelFN)
             data = pd.read_excel(dataDir,sheet_name = 'End point',skiprows=12)
             data = data.drop(['Content'], axis=1)
@@ -59,12 +59,13 @@ for fNVar, plateList in filenameCoreList.items():
             
             plateData['Well'] = data['Well']
             
-            if indCon == '-':
-                plateData['-Ind OD'] = data['Raw Data (600 1)']
-                plateData['-Ind Fluo'] = data['Raw Data (584 2)']
-            else:
-                plateData['+Ind OD'] = data['Raw Data (600 1)']
-                plateData['+Ind Fluo'] = data['Raw Data (584 2)']
+            indCon_OD = 'Ind' + indCon + '_OD'
+            indCon_Fluo = 'Ind' + indCon + '_Fluo'
+            indCon_FluoOD = 'Ind' + indCon + '_Fluo/OD'
+            
+            plateData[indCon_OD] = data['Raw Data (600 1)']
+            plateData[indCon_Fluo] = data['Raw Data (584 2)']
+            plateData[indCon_FluoOD] = plateData[indCon_Fluo]/plateData[indCon_OD]
             
             # Update the index so it matches the conventional nomenclature
             indexList = plateData['Well'].tolist()
@@ -74,16 +75,15 @@ for fNVar, plateList in filenameCoreList.items():
             plateData['Plate'] = plateNo
             
             # Read Metadata Excelfile
-            metadataNameCore = 'BM005_Screen1_' + plateNo + '_PRPlateMetadata.xlsx'
+            metadataNameCore = 'BM005_Screen2_P' + plateNo + '_PRPlateMetadata.xlsx'
             metafilename = metadataNameCore
             metadataDir = os.path.join(dataRootDir,dataFolderDir,dataFolder2Dir,metafilename)
             metadf = cf.metadata_to_metadf(metadataDir)
 
         plateData = plateData.merge(metadf,left_on='Well',right_index=True)
         mergedData = mergedData.append(plateData,ignore_index=False,sort=False)
-        mergedData['-Ind Fluo/OD'] =  mergedData['-Ind Fluo']/mergedData['-Ind OD']
-        mergedData['+Ind Fluo/OD'] =  mergedData['+Ind Fluo']/mergedData['+Ind OD']
-        mergedData['IndFoldChange'] = mergedData.apply(lambda mergedData :mergedData['-Ind Fluo/OD']/mergedData['+Ind Fluo/OD'] if mergedData['-Ind Fluo/OD']!=0 else np.nan,axis=1) 
+             
+#        mergedData['IndFoldChange'] = mergedData.apply(lambda mergedData :mergedData['-Ind Fluo/OD']/mergedData['+Ind Fluo/OD'] if mergedData['-Ind Fluo/OD']!=0 else np.nan,axis=1) 
 
     # Export Data File, one for each induction time point
     outputCSV = fNVar + 'pooledData.csv'
