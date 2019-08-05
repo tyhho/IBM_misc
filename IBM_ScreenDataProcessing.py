@@ -20,12 +20,12 @@ def renameIndex(indexStr=str):
     # this is also the folder where the output will be deposited
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir = 'BM005'
-dataFolder2Dir = 'Screen2'
-outputCSV = 'BM005_Screen2_pooledData.csv'
+dataFolder2Dir = 'Screen2_Gain 1000'
+outputCSV = 'BM005_Screen2_Gain 1000_pooledData.csv'
 
 #%%
 # Create dict for handling multiple files at once
-filenameCoreList = {'PR_BM005_Screen2_PI18_': ['1','2']
+filenameCoreList = {'PR_BM005_Screen2_1000_PI18_': ['1','2']
                     }
 
 # Create list for induction OFF & ON states
