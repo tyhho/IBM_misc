@@ -20,7 +20,7 @@ import fnmatch
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir='FC022'
-outputCSV = 'IBM_FC022R1_PRData.csv'
+outputCSV = 'IBM_FC022R2_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
@@ -46,8 +46,8 @@ allFiles = os.listdir(folderDir)
         # c. a customized list of [filename, well] that specifies where the blank should be looked up
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC022R1PI16P1.xlsx': ['PRMD_IBM_FC022P1.xlsx'],
-            'PR_IBM_FC022R1PI16P2.xlsx': ['PRMD_IBM_FC022P2.xlsx']
+fileList = {'PR_IBM_FC022R2PI16P1.xlsx': ['PRMD_IBM_FC022R2P1.xlsx'],
+            'PR_IBM_FC022R2PI16P2.xlsx': ['PRMD_IBM_FC022R2P2.xlsx']
                     }
 
 # Process data (median fluorescence) from 96 well plate format into Seaborn-friendly format
