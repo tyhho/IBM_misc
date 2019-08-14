@@ -10,8 +10,6 @@ that contains information on corrected OD600, corrected red fluorescence
 and corrected fluorescence/OD600, it also adds metadata to the file regarding
 the Run number, the SampleID and the condition
 
-This script is tailored for FC014 Run 2
-
 """
 
 import os
@@ -21,14 +19,14 @@ import fnmatch
 
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC018'
-outputCSV = 'IBM_FC018R5-7_PRData.csv'
+dataFolderDir='FC022'
+outputCSV = 'IBM_FC022R1_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
 
 # TODO: Use master_blank_info if all files use the same blank info
-master_blank_info = ['PR_IBM_FC018R3PI5P1.xlsx','A01']    #provide fn and well location of where the blank should be
+master_blank_info = []    #provide fn and well location of where the blank should be
 
 
 #%%
@@ -43,35 +41,13 @@ allFiles = os.listdir(folderDir)
     # For each file, provide 2 info in a list
     # 1. metadata file
     # 2. info for blank, can be:
-        # a. null, the script will look for blank using the metadata provided and raise error if blank is not found
+        # a. null, not giving a item 2 in list, the script will look for blank using the metadata provided and raise error if blank is not found
         # b. master_blank_info, when one blank info is used consistently across all files in one processing run 
         # c. a customized list of [filename, well] that specifies where the blank should be looked up
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC018R5PI5P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R5PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R5PI5P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R5PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R5PI5P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R5PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R5PI5P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R5PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R5PI24P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R5PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R5PI24P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R5PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R5PI24P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R5PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R5PI24P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R5PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R6PI5P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R6PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R6PI5P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R6PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R6PI5P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R6PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R6PI5P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R6PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R6PI24P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R6PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R6PI24P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R6PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R6PI24P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R6PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R6PI24P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R6PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R7PI5P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R7PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R7PI5P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R7PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R7PI5P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R7PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R7PI5P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R7PI5P1.xlsx','A01']],
-            'PR_IBM_FC018R7PI24P1.xlsx': ['PRMD_IBM_FC018P1.xlsx', ['PR_IBM_FC018R7PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R7PI24P2.xlsx': ['PRMD_IBM_FC018P2.xlsx', ['PR_IBM_FC018R7PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R7PI24P3.xlsx': ['PRMD_IBM_FC018P3.xlsx', ['PR_IBM_FC018R7PI24P1.xlsx','A01']],
-            'PR_IBM_FC018R7PI24P4.xlsx': ['PRMD_IBM_FC018P4.xlsx', ['PR_IBM_FC018R7PI24P1.xlsx','A01']],
+fileList = {'PR_IBM_FC022R1PI16P1.xlsx': ['PRMD_IBM_FC022P1.xlsx'],
+            'PR_IBM_FC022R1PI16P2.xlsx': ['PRMD_IBM_FC022P2.xlsx']
                     }
 
 # Process data (median fluorescence) from 96 well plate format into Seaborn-friendly format
@@ -128,7 +104,7 @@ for fnSearchSeq, metaInfo in fileList.items():
         # Handle blanks 
         if useBlankInSelf == True:
             # Drop raw data that did not receive blank correction
-            data = data.drop(['Content','Raw Data (600 1)','Raw Data (584 2)'], axis=1)
+            data = data.drop(['Raw Data (600 1)','Raw Data (584 2)'], axis=1)
             # Drop blank data
             data = data.drop(from_meta_blank_list,axis=0)
             # Rename cols
