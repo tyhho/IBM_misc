@@ -30,30 +30,8 @@ all_doi_filename = 'IBM_FC022R1_FCmedian&metadata&PRData.csv'
 # Create dict with information of FCS folder name (key) and also Metadata file (value)
 
 # TODO: In the future, this needs to be done automatically
-plateList = {'IBM_FC018R5PI5P1':'FCMD_IBM_FC018P1',
-             'IBM_FC018R5PI5P2':'PRMD_IBM_FC018P2',
-             'IBM_FC018R5PI5P3':'PRMD_IBM_FC018P3',
-             'IBM_FC018R5PI5P4':'PRMD_IBM_FC018P4',
-             'IBM_FC018R5PI5P1':'FCMD_IBM_FC018P1',
-             'IBM_FC018R5PI24P2':'PRMD_IBM_FC018P2',
-             'IBM_FC018R5PI24P3':'PRMD_IBM_FC018P3',
-             'IBM_FC018R5PI24P4':'PRMD_IBM_FC018P4',
-             'IBM_FC018R6PI5P1':'FCMD_IBM_FC018P1',
-             'IBM_FC018R6PI5P2':'PRMD_IBM_FC018P2',
-             'IBM_FC018R6PI5P3':'PRMD_IBM_FC018P3',
-             'IBM_FC018R6PI5P4':'PRMD_IBM_FC018P4',
-             'IBM_FC018R6PI5P1':'FCMD_IBM_FC018P1',
-             'IBM_FC018R6PI24P2':'PRMD_IBM_FC018P2',
-             'IBM_FC018R6PI24P3':'PRMD_IBM_FC018P3',
-             'IBM_FC018R6PI24P4':'PRMD_IBM_FC018P4',
-             'IBM_FC018R7PI5P1':'FCMD_IBM_FC018P1',
-             'IBM_FC018R7PI5P2':'PRMD_IBM_FC018P2',
-             'IBM_FC018R7PI5P3':'PRMD_IBM_FC018P3',
-             'IBM_FC018R7PI5P4':'PRMD_IBM_FC018P4',
-             'IBM_FC018R7PI5P1':'FCMD_IBM_FC018P1',
-             'IBM_FC018R7PI24P2':'PRMD_IBM_FC018P2',
-             'IBM_FC018R7PI24P3':'PRMD_IBM_FC018P3',
-             'IBM_FC018R7PI24P4':'PRMD_IBM_FC018P4'
+plateList = {'IBM_FC022R1PI16P1':'PRMD_IBM_FC022R1P1',
+             'IBM_FC022R1PI16P2':'PRMD_IBM_FC022R1P1'
              }
 
 #%% Core Processing Codes
