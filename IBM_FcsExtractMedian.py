@@ -18,13 +18,13 @@ import IBM_CustomFunctions as cf
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC018'
+dataFolderDir = 'FC022'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC018R5-7_PRData.csv'
+pr_data_filename = 'IBM_FC022R1_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC018R5-7_FCmedian&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC022R1_FCmedian&metadata&PRData.csv'
 
 # TODO: Specify subfolders containing FCS files
 # Create dict with information of FCS folder name (key) and also Metadata file (value)
