@@ -20,15 +20,15 @@ sns.reset_defaults
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 
 # TODO: Specify location of CSV file containing identified split sites
-ssFolderDir1 = 'BM004'
-ssFolderDir2 = 'Sequencing Results'
-ss_csv = 'IBM_BM004_IdentifiedSplitSites.csv'
+ssFolderDir1 = 'BM005'
+ssFolderDir2 = 'BM005_Sequencing Results'
+ss_csv = 'IBM_BM005_IdentifiedSplitSites.csv'
 
 # TODO: Specify location of CSV file containing the median fluorescence values of the strains
-fluoFolderDir='FC013'
-fluo_csv = 'IBM_FC013R1-3_FCmedian&metadata&PRData.csv'
+fluoFolderDir='FC023'
+fluo_csv = 'IBM_FC023R3-5_FCmedian&metadata&PRData.csv'
 # TODO: Specify location of CSV file containing the median fluorescence values of control strains
-control_fluo_csv = 'IBM_FC013R1-3_FCmedianStats&metadata.csv'
+control_fluo_csv = 'IBM_FC013R3-5_FCmedianStats&metadata.csv'
 
 # TODO: Specify filename to be saved. Figure will be saved under path of dataRootDir\ssFolderDir1
 figName = 'IBM_BM004_BisectionMap_Raw.eps'
