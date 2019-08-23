@@ -66,6 +66,22 @@ def renameDfWellIndex(data):
     data.set_index(pd.Index(indexList),inplace=True)
     return data
 
+# Custom function to define filename where the blank is
+def findBlankXlsx(fn=str, blankPlate=str):
+    '''Read filename of excel file of plate reader data and returns the plate where blank is'''
+    fnCoreEnd = fn.rfind('P')
+    fnCore = fn[:fnCoreEnd+1]
+    blankFN =  fnCore + blankPlate + '.xlsx'
+    return blankFN
+
+def findMetaXlsx(fn=str, metaCore=str):
+    '''Read filename of excel file of plate reader data and returns the corresponding metadata file'''
+    fnCoreEnd = fn.rfind('P')
+    plateNo = fn[fnCoreEnd:].split('.')[0]
+    metaFN = metaCore + plateNo + '.xlsx'
+    return metaFN
+
+
 #%% Rename files
 #
 #import os

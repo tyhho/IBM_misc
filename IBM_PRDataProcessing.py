@@ -17,25 +17,25 @@ import pandas as pd
 import IBM_CustomFunctions as cf
 import fnmatch
 
+
+#%%
+
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC024'
-outputCSV = 'IBM_FC024R2_PRData.csv'
+dataFolderDir='FC023'
+outputCSV = 'IBM_FC023R3-5_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
 
 # TODO: Use master_blank_info if all files use the same blank info
 master_blank_info = []    #provide fn and well location of where the blank should be
-
-
-#%%
-
 alldata = pd.DataFrame(columns = [])
 folderDir = os.path.join(dataRootDir, dataFolderDir)
 allFiles = os.listdir(folderDir)
 
-#%%
+#%% Strategy 1
+
 # Create dict for handling multiple files at once
     # The key specifies the filename search criteria
     # For each file, provide 2 info in a list
@@ -44,10 +44,11 @@ allFiles = os.listdir(folderDir)
         # a. null, not giving a item 2 in list, the script will look for blank using the metadata provided and raise error if blank is not found
         # b. master_blank_info, when one blank info is used consistently across all files in one processing run 
         # c. a customized list of [filename, well] that specifies where the blank should be looked up
+            # if 'filename' here is given as 'customFunction', then it will call the findBlankXlsx function to look for the blank
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC024R2PI18.xlsx': ['PRMD_IBM_FC024R2.xlsx']
-                    }
+fileList = {'PR_IBM_FC023R3PI5P1.xlsx': ['PRMD_IBM_FC023R2P1.xlsx',['PR_IBM_FC023R3PI5P1.xlsx','B2']]                    }
+
 
 # Process data (median fluorescence) from 96 well plate format into Seaborn-friendly format
 
@@ -68,12 +69,12 @@ for fnSearchSeq, metaInfo in fileList.items():
         # check if blankInfo was provided but given in wrong format
         if type(blankInfo) != list or len(blankInfo) != 2:
             raise ValueError('Blank Info should be a list with 1st item as filename and 2nd item as well location')
-
+        # If not, assume everything is ok and continue to extract blank info
         blankFN = blankInfo[0] # extract filename containing blank
         blankDir = os.path.join(dataRootDir, dataFolderDir,blankFN)
         dataInBlank = pd.read_excel(blankDir,sheet_name = 'End point',index_col=0,skiprows=12)
         dataInBlank = dataInBlank.drop(['Content'], axis=1)
-    
+
         blankIndex = dataInBlank.index.get_loc(blankInfo[1])
         blankOD = dataInBlank.iloc[blankIndex][0]  #extract blank OD
         blankRF = dataInBlank.iloc[blankIndex][1]  #extract blank red fluorescence
@@ -152,8 +153,95 @@ for fnSearchSeq, metaInfo in fileList.items():
         data['PR_Well'] = data.index
         alldata = alldata.append(data,ignore_index=True,sort=None)
 
-#%%
+#%% Strategy 2
 
+# For everyfile pattern that matches the filename, look for corresponding metadatafile and blank excel file
+
+metadatafnCore = 'PRMD_IBM_FC023R2'
+blank_well = 'B02'
+blank_plate = '1'
+
+fileList = ['PR_IBM_FC023R3*.xlsx',
+            'PR_IBM_FC023R4*.xlsx',
+            'PR_IBM_FC023R5*.xlsx'
+            ]
+
+# Process data (median fluorescence) from 96 well plate format into Seaborn-friendly format
+
+for fnSearchSeq in fileList:
+
+    # Get all files that match the search criteria
+    matchedFiles = fnmatch.filter(allFiles,fnSearchSeq)
+    
+    # Process each file
+    for matchedfn in matchedFiles:
+        
+        # Get metadata
+        metafn = cf.findMetaXlsx(matchedfn,metadatafnCore)
+        metadataDir = os.path.join(dataRootDir,dataFolderDir,metafn)
+        metadata_df = cf.metadata_to_metadf(metadataDir)
+        
+        # Get blank info
+        # If not, assume everything is ok and continue to extract blank info
+        blankFN = cf.findBlankXlsx(matchedfn, blank_plate) #get filename using custom function
+        blankDir = os.path.join(dataRootDir, dataFolderDir,blankFN)
+        dataInBlank = pd.read_excel(blankDir,sheet_name = 'End point',index_col=0,skiprows=12)
+        dataInBlank = dataInBlank.drop(['Content'], axis=1)
+
+        blankIndex = dataInBlank.index.get_loc(blank_well)
+        blankOD = dataInBlank.iloc[blankIndex][0]  #extract blank OD
+        blankRF = dataInBlank.iloc[blankIndex][1]  #extract blank red fluorescence
+        
+        del blankFN, blankDir, dataInBlank,blankIndex
+        
+        # Read data
+        dataDir = os.path.join(dataRootDir, dataFolderDir,matchedfn)
+        data = pd.read_excel(dataDir,sheet_name = 'End point',index_col=0,skiprows=12)
+        data = data.drop(['Content'], axis=1)
+        
+        # Update the index so it matches the conventional nomenclature
+        data = cf.renameDfWellIndex(data)
+        
+        # Blank correction
+        data['Raw Data (600 1)'] -= blankOD
+        data['Raw Data (584 2)'] -= blankRF
+        # Rename cols
+        data.rename(columns={'Raw Data (600 1)': 'PR_Corrected OD600',
+                             'Raw Data (584 2)': 'PR_Corrected Red Fluorescence (a.u.)'}, inplace=True)
+
+        
+        # Add extra metadata based on info in filename
+        # Extract information from filename
+        fnInfo = matchedfn.split('.xlsx')[0][3:]    #Removes 'PR' from filename for downstream analysis
+        run_no = int(fnInfo.split('R')[1][0])
+                  
+        # Check if induction time and plate no info are in the filename
+        if fnInfo.find('PI')>=0:
+            ind_time_frag = fnInfo.split('PI')[1]
+            if ind_time_frag.find('P') >=0:
+                try:
+                    plate_no = int(ind_time_frag.split('P')[1])
+                except ValueError:
+                    plate_no = ind_time_frag.split('P')[1]
+            try:
+                ind_time = int(ind_time_frag.split('P')[0])
+            except ValueError:
+                ind_time = ind_time_frag.split('P')[0]
+        elif fnInfo.find('P') >=0:
+            plate_no = int(fnInfo.split('P')[1])
+        
+        data['Run'] = run_no
+        data['Post-induction (hrs)'] = ind_time
+        data['PR_Plate'] = plate_no
+
+        # Append metadata
+        data = data.merge(metadata_df,left_index=True,right_index=True)
+        
+        data['PR_Well'] = data.index
+        alldata = alldata.append(data,ignore_index=True,sort=None)
+
+
+#%%
 '''
 Note: this strategy is deprecated because it only works when mapping many PR files to one metadata file.
 Strategy: 
