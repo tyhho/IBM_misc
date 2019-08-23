@@ -9,37 +9,45 @@ Created on Wed Jan 23 17:31:09 2019
 #except ModuleNotFoundError:
 #    import pickle
 
+import glob
 import os
-from FlowCytometryTools.core.gates import CompositeGate
-from FlowCytometryTools import FCPlate, ThresholdGate
 import pandas as pd
 import IBM_CustomFunctions as cf
+from FlowCytometryTools.core.gates import CompositeGate
+from FlowCytometryTools import ThresholdGate, FCPlate
 
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC024'
+dataFolderDir = 'FC023'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC024R2_PRData.csv'
+pr_data_filename = 'IBM_FC023R3-5_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC024R2_FCmedian&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC023R3-5_FCmedian&metadata&PRData.csv'
 
-# TODO: Specify subfolders containing FCS files
-# Create dict with information of FCS folder name (key) and also Metadata file (value)
+# TODO: Specify folder sequence for processing
+coreSearchSeq = 'IBM_FC023R[3-5]*_FCS'
 
-# TODO: In the future, this needs to be done automatically
-plateList = {'IBM_FC024R2PI18':'PRMD_IBM_FC024R2',
-             }
+# TODO: Specify metadata file core
+metadatafnCore = 'PRMD_IBM_FC023R2'
+
+#%%
+# Get all folder that match the search criteria
+dirSearchSeq = os.path.join(dataRootDir, dataFolderDir,coreSearchSeq)
+matchedFolderList = glob.glob(dirSearchSeq)
 
 #%% Core Processing Codes
 
 all_doi_df = pd.DataFrame(columns=[])
 
-for plateNameCore,metadataNameCore in plateList.items():
+for matchedFolder in matchedFolderList:
+    
+    plateNameCore = matchedFolder.rsplit('\\')[-1].split('_FCS')[0]
+    
     # Read Metadata Excelfile
-    metafilename = metadataNameCore + '.xlsx'
+    metafilename = cf.findMetaXlsx(plateNameCore + '.',metadatafnCore)
     metadataDir = os.path.join(dataRootDir,dataFolderDir,metafilename)
     metaxls= pd.ExcelFile(metadataDir)
     metadata = {sheet:metaxls.parse(sheet, index_col=0) for sheet in metaxls.sheet_names}    #import all sheets in metadata file into a dict, property name=keys, metadata df = values
@@ -120,8 +128,8 @@ for plateNameCore,metadataNameCore in plateList.items():
         doi_df = doi_df.merge(metadf,left_index=True,right_index=True)
     doi_df['FC_Well'] = doi_df.index
     all_doi_df = all_doi_df.append(doi_df,ignore_index=True,sort=False)
-    
-    #%%
+        
+#%%
 # Merge all data from plate reader into cytometer
 pr_data_dir = os.path.join(dataRootDir,dataFolderDir,pr_data_filename)
 all_pr_data = pd.read_csv(pr_data_dir,index_col=0)
