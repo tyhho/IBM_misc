@@ -106,7 +106,12 @@ for matchedFolder in matchedFolderList:
     except ValueError:
         doi_df['Post-induction (hrs)'] = post_induction_time
     
-    # TODO: need to add method to add FC_Plate number to dataset
+    # Add FC_Plate number to dataset, if it is present
+    fc_plate_no = plateNameCore.split('PI')[1] .split('P')[1]
+    try:
+        doi_df['FC_Plate'] = int(fc_plate_no)
+    except ValueError:
+        pass
     
     # Process the df of metadata & merge into the main dataframe
     for meta_property, metadf_96format in metadata.items():
