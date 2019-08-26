@@ -17,9 +17,6 @@ import pandas as pd
 import IBM_CustomFunctions as cf
 import fnmatch
 
-
-#%%
-
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir='FC023'
@@ -161,7 +158,8 @@ metadatafnCore = 'PRMD_IBM_FC023R2'
 blank_well = 'B02'
 blank_plate = '1'
 
-fileList = ['PR_IBM_FC023R3*.xlsx',
+fileList = [
+            'PR_IBM_FC023R3*.xlsx',
             'PR_IBM_FC023R4*.xlsx',
             'PR_IBM_FC023R5*.xlsx'
             ]
@@ -239,7 +237,8 @@ for fnSearchSeq in fileList:
         
         data['PR_Well'] = data.index
         alldata = alldata.append(data,ignore_index=True,sort=None)
-
+        
+alldata = alldata[alldata['SampleID'] != 'Blank']
 
 #%%
 '''
