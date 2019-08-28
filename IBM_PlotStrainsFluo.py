@@ -33,13 +33,13 @@ pi_times = [5,24]
 
 # Read data
 csvDir = os.path.join(dataRootDir,dataFolderDir,dataFN)
-data = pd.read_csv(csvDir,index_col=0)
+fluo_data = pd.read_csv(csvDir,index_col=0)
 
 ## Generate data for mean and sd, according to the induction
 stat_data = pd.DataFrame(columns=[])
 for pi_time in pi_times:
     for induction in inductions:
-        subdata = data[(data['Induction']==induction) & (data['Post-induction (hrs)']==pi_time)]
+        subdata = fluo_data[(fluo_data['Induction']==induction) & (fluo_data['Post-induction (hrs)']==pi_time)]
         subdata.set_index(['SampleID'],inplace=True)
         for index in set(subdata.index):
             subframe = subdata.loc[index]
@@ -83,7 +83,7 @@ controls_order_df['SortIndex'] = list(range(1,len(control_list)+1))
 
 ordered_df = ordered_df.drop('mean of median fluorescence (a.u.)',axis=1)
 ordered_df = ordered_df.append(controls_order_df,ignore_index=True,sort=False)
-data = pd.merge(data,ordered_df)
+fluo_data = pd.merge(fluo_data,ordered_df)
 stat_data = pd.merge(stat_data,ordered_df)
 
 #%%
@@ -106,7 +106,7 @@ hline_data = pd.DataFrame(columns=[])
 
 for key, pi_time in pi_dict.items():
     for queryLine, color in hline_input.items():
-        hRefSubData = data.query(queryLine)
+        hRefSubData = fluo_data.query(queryLine)
         hRefSubData = hRefSubData[hRefSubData['Post-induction (hrs)']==pi_time]
         hRefSubData = hRefSubData['median fluorescence (a.u.)']        
         hline_data_row_dict = {
