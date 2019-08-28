@@ -25,7 +25,7 @@ dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted
 dataFolderDir='FC023'
 dataFN = 'IBM_FC023R3-5_FCmedian&metadata&PRData_InductionProcessed.csv'
 statFN = 'IBM_FC023R3-5_FCmedianStats&metadata.csv'
-figName = 'IBM_FC013R3-5_Result.eps'
+figName = 'IBM_FC013R3-5_Result.pdf'
 
 # TODO: Set induction information
 inductions = ['no induction','1 mM arabinose','25 μM DAPG','1 mM arabinose + 25 μM DAPG']
@@ -215,7 +215,7 @@ ax[1,1].legend(
 
 # Control group labels and ticks
 for i in [0,1]:
-    ax[i,0].set_xlim(0, ctrl_len+1)
+    ax[i,0].set_xlim(0.5, ctrl_len+0.5)
     ax[i,0].set_xticks(range(1,ctrl_len+1))
 
 for i in [0,1]:
