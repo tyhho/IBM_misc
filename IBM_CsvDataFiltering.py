@@ -57,7 +57,7 @@ for induction in inductions:
         reorgData[colName] = reorgData[induction] / reorgData[denominator]
 
 # 
-foldChangeThreshold = 2
+foldChangeThreshold = 3
 
 all_samples_to_drop = []
 
