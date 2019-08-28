@@ -129,6 +129,7 @@ ctrl_stat_data = stat_data[stat_data['SampleID'].isin(control_list)]
 sns.set(style='ticks')
 fig, ax = plt.subplots(2, 2, sharex=True, sharey=True, figsize=(8, 6), dpi = 200)
 
+# TODO: Decide color for inductions
 color_mapper = {
         'no induction':'#F96495',
         '1 mM arabinose':'#55A0FB',
@@ -138,7 +139,6 @@ color_mapper = {
 
 # Calculate width ratio by number of elements
 ctrl_len = len(control_list)
-
 candidate_len = 96 # TODO: Fix this line
 
 # Grid spec
