@@ -23,9 +23,9 @@ sns.reset_defaults
 
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir='FC023'
-dataFN = 'IBM_FC023R3-5_FCmedian&metadata&PRData_InductionProcessed.csv'
-statFN = 'IBM_FC023R3-5_FCmedianStats&metadata.csv'
-figName = 'IBM_FC013R3-5_Result.pdf'
+dataFN = 'IBM_FC023R3-5_FCmedian&metadata&PRData_InductionProcessed_FoldChangeFiltered.csv'
+statFN = 'IBM_FC023R3-5_FCmedianStats&metadata_FoldChangeFiltered.csv'
+figName = 'IBM_FC013R3-5_Result_FoldChangeFiltered.pdf'
 
 # TODO: Set induction information
 inductions = ['no induction','1 mM arabinose','25 μM DAPG','1 mM arabinose + 25 μM DAPG']
@@ -139,7 +139,7 @@ color_mapper = {
 
 # Calculate width ratio by number of elements
 ctrl_len = len(control_list)
-candidate_len = 96 # TODO: Fix this line
+candidate_len = len(candidate_stat_data)/len(inductions)/len(pi_dict)
 
 # Grid spec
 gs = gridspec.GridSpec(2, 2, width_ratios=[ctrl_len+10, candidate_len+4]) 
