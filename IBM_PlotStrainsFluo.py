@@ -27,7 +27,7 @@ dataFN = 'IBM_FC023R3-5_FCmedian&metadata&PRData_InductionProcessed_FoldChangeFi
 statFN = 'IBM_FC023R3-5_FCmedianStats&metadata_FoldChangeFiltered.csv'
 figName = 'IBM_FC013R3-5_Result_FoldChangeFiltered.pdf'
 
-# TODO: Set induction information
+# TODO: Set induction and induction time information
 inductions = ['no induction','1 mM arabinose','25 μM DAPG','1 mM arabinose + 25 μM DAPG']
 pi_times = [5,24]
 
