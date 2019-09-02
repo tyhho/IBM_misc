@@ -75,12 +75,15 @@ def findBlankXlsx(fn=str, blankPlate=str):
     return blankFN
 
 def findMetaXlsx(fn=str, metaCore=str):
-    '''Read filename of excel file of plate reader data and returns the corresponding metadata file'''
-    fnCoreEnd = fn.rfind('P')
-    plateNo = fn[fnCoreEnd:].split('.')[0]
-    metaFN = metaCore + plateNo + '.xlsx'
+    '''Read filename of excel file of plate reader data and returns the corresponding metadata file'''    
+    fn = fn.replace('PI','')
+    try:
+        fnCoreEnd = fn.rfind('P')
+        plateNo = fn[fnCoreEnd:].split('.')[0]
+        metaFN = metaCore + plateNo + '.xlsx'
+    except NameError:
+        metaFN = metaCore + '.xlsx'
     return metaFN
-
 
 #%% Rename files
 #

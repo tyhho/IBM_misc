@@ -19,19 +19,19 @@ from FlowCytometryTools import ThresholdGate, FCPlate
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC023'
+dataFolderDir = 'FC019'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC023R3-5_PRData.csv'
+pr_data_filename = 'IBM_FC019R4_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC023R3-5_FCmedian&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC019R4_FCmedian&metadata&PRData.csv'
 
 # TODO: Specify folder sequence for processing
-coreSearchSeq = 'IBM_FC023R[3-5]*_FCS'
+coreSearchSeq = 'IBM_FC019R4*_FCS'
 
 # TODO: Specify metadata file core
-metadatafnCore = 'PRMD_IBM_FC023R2'
+metadatafnCore = 'PRMD_IBM_FC019'
 
 #%%
 # Get all folder that match the search criteria
@@ -107,10 +107,10 @@ for matchedFolder in matchedFolderList:
         doi_df['Post-induction (hrs)'] = post_induction_time
     
     # Add FC_Plate number to dataset, if it is present
-    fc_plate_no = plateNameCore.split('PI')[1] .split('P')[1]
     try:
+        fc_plate_no = plateNameCore.split('PI')[1] .split('P')[1]
         doi_df['FC_Plate'] = int(fc_plate_no)
-    except ValueError:
+    except IndexError or ValueError:
         pass
     
     # Process the df of metadata & merge into the main dataframe
