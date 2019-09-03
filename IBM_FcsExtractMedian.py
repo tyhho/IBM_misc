@@ -19,19 +19,19 @@ from FlowCytometryTools import ThresholdGate, FCPlate
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC020'
+dataFolderDir = 'FC018'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC020R2_PRData.csv'
+pr_data_filename = 'IBM_FC018R5-7_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC020R2_FCmedian&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC018R5-7_FCmedian&metadata&PRData.csv'
 
 # TODO: Specify folder sequence for processing
-coreSearchSeq = 'IBM_FC020R2*_FCS'
+coreSearchSeq = 'IBM_FC018R[5-7]*_FCS'
 
 # TODO: Specify metadata file core
-metadatafnCore = 'FCMD_IBM_FC020'
+metadatafnCore = 'PRMD_IBM_FC018'
 
 #%%
 # Get all folder that match the search criteria
