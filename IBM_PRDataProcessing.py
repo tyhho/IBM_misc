@@ -306,4 +306,4 @@ Strategy:
 # %%
 # Save file as CSV
 csvDir = os.path.join(folderDir,outputCSV)
-alldata.to_csv(csvDir,header=True,encoding='utf-8')
+alldata.to_csv(csvDir)
