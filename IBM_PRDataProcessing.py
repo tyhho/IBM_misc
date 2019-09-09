@@ -20,7 +20,7 @@ import fnmatch
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir='FC021'
-outputCSV = 'IBM_FC021R2-7_PRData.csv'
+outputCSV = 'IBM_FC021R2-7_Finalized_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
@@ -164,10 +164,11 @@ blank_well = 'B02'
 blank_plate = '1'
 
 fnSearchSeqList = [
-#            'PR_IBM_FC021R[2,3,4]*P2.xlsx',
-#            'PR_IBM_FC021R[3,4,5]*P3.xlsx',
-#            'PR_IBM_FC021R[4,6,7]*P4.xlsx'
-            'PR_IBM_FC021R[2-7]*.xlsx'
+            'PR_IBM_FC021R[2,3,4]*P1.xlsx',
+            'PR_IBM_FC021R[2,3,4]*P2.xlsx',
+            'PR_IBM_FC021R[3,4,5]*P3.xlsx',
+            'PR_IBM_FC021R[4,6,7]*P4.xlsx'
+#            'PR_IBM_FC021R[2-7]*.xlsx'
             ]
 
 #fnSearchSeq = 'PR_IBM_FC021R[2-7]*.xlsx'
