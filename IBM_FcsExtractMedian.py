@@ -19,19 +19,19 @@ from FlowCytometryTools import ThresholdGate, FCPlate
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC018'
+dataFolderDir = 'FC021'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC018R5-7_PRData.csv'
+pr_data_filename = 'IBM_FC021R2-7_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC018R5-7_FCmedian&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC021R2-7_FCmedian&metadata&PRData.csv'
 
 # TODO: Specify folder sequence for processing
-coreSearchSeq = 'IBM_FC018R[5-7]*_FCS'
+coreSearchSeq = 'IBM_FC021R[2-7]*_FCS'
 
 # TODO: Specify metadata file core
-metadatafnCore = 'PRMD_IBM_FC018'
+metadatafnCore = 'PRMD_IBM_FC021'
 
 #%%
 # Get all folder that match the search criteria
@@ -85,7 +85,7 @@ for matchedFolder in matchedFolderList:
         data.to_excel(writer, sheet_name=sheetName)
     writer.save()
     
-    #%% Produces a separate csv file that merges the metadata and the median
+    # Produces a separate csv file that merges the metadata and the median
         # It also adds Experiment Run data and also Condition as specified by the filename
         # A single csv file will be generated in the end for all experiment runs
 
@@ -138,6 +138,8 @@ for matchedFolder in matchedFolderList:
 # Merge all data from plate reader into cytometer
 pr_data_dir = os.path.join(dataRootDir,dataFolderDir,pr_data_filename)
 all_pr_data = pd.read_csv(pr_data_dir,index_col=0)
+
+#%%
 final_all_doi_df = all_doi_df.merge(all_pr_data)
 
 all_doi_dir = os.path.join(dataRootDir,dataFolderDir,all_doi_filename)

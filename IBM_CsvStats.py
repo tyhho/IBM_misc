@@ -13,9 +13,9 @@ import pandas as pd
     # csv file containing data to be plotted should be in this folder
 
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC018'
-dataFN = 'IBM_FC018R5-7_FCmedian&metadata&PRData.csv'
-hlineDataFN = 'IBM_FC018R5-7_FCmedian&metadata&PRData_CtrlStats.csv'
+dataFolderDir='FC021'
+dataFN = 'IBM_FC021R2-7_FCmedian&metadata&PRData.csv'
+hlineDataFN = 'IBM_FC021R2-7_FCmedian&metadata&PRData_CtrlStats.csv'
 
 # Read data
 csvDir = os.path.join(dataRootDir,dataFolderDir,dataFN)

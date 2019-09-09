@@ -21,12 +21,12 @@ dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assist
 # TODO: Specify CSV file containing the fluorescence data to plot
 # TODO: Specify CSV file containing the information for plotting horizontal ref lines
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC018'
-dataFN = 'IBM_FC018R5-7_FCmedian&metadata&PRData.csv'
-hlineDataFN = 'IBM_FC018R5-7_FCmedian&metadata&PRData_CtrlStats.csv'
+dataFolderDir='FC021'
+dataFN = 'IBM_FC021R2-7_FCmedian&metadata&PRData.csv'
+hlineDataFN = 'IBM_FC021R2-7_FCmedian&metadata&PRData_CtrlStats.csv'
 
 # TODO: Specify filename to be saved. Figure will be saved under path of dataRootDir/dataFolderDir
-figName = 'IBM_FC018R5-7_Result.pdf'
+figName = 'IBM_FC021R2-7_Result.pdf'
 
 # Read data
 csvDir = os.path.join(dataRootDir,dataFolderDir,dataFN)
