@@ -20,7 +20,7 @@ import fnmatch
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 dataFolderDir='FC021'
-outputCSV = 'IBM_FC021R2-7_Finalized_PRData.csv'
+outputCSV = 'IBM_FC021R2-7_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
