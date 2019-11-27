@@ -19,8 +19,8 @@ import fnmatch
 
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC021'
-outputCSV = 'IBM_FC021R2-7_Finalized_PRData.csv'
+dataFolderDir='FC028'
+outputCSV = 'IBM_FC028R1_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
@@ -44,8 +44,8 @@ allFiles = os.listdir(folderDir)
             # if 'filename' here is given as 'customFunction', then it will call the findBlankXlsx function to look for the blank
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC020R2PI*P1.xlsx': ['PRMD_IBM_FC020P1.xlsx'],
-            'PR_IBM_FC020R2PI*P2.xlsx': ['PRMD_IBM_FC020P2.xlsx']}
+fileList = {'PR_IBM_FC028R1PI*.xlsx': ['PRMD_IBM_FC028R1.xlsx']
+            }
 
 
 # Process data (median fluorescence) from 96 well plate format into Seaborn-friendly format
@@ -159,7 +159,7 @@ for fnSearchSeq, metaInfo in fileList.items():
 
 # For everyfile pattern that matches the filename, look for corresponding metadatafile and blank excel file
 
-metadatafnCore = 'PRMD_IBM_FC021'
+metadatafnCore = 'PRMD_IBM_FC028'
 blank_well = 'B02'
 blank_plate = '1'
 
