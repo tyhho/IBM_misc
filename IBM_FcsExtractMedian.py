@@ -25,16 +25,16 @@ dataFolderDir = 'FC028'
 #pr_data_filename = 'IBM_FC021R2-7_Finalized_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC028_median&metadata&PRData.csv'
+all_doi_filename = 'IBM_FC028R4_median&metadata&PRData.csv'
 
 # TODO: Specify metadata file core
-metadatafnCore = 'PRMD_IBM_FC028R1'
+metadatafnCore = 'PRMD_IBM_FC028R2'
 
 #%%
 # TODO: Specify folder sequence for processing
 
 coreSearchSeqList = [
-            'IBM_FC028R1PI*_FCS',
+            'IBM_FC028R4PI*_FCS',
 #            'IBM_FC021R[2,3,4]*P2_FCS',
 #            'IBM_FC021R[2-7]*_FCS'
             ]
