@@ -19,8 +19,8 @@ import fnmatch
 
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC028'
-outputCSV = 'IBM_FC028R4_PRData.csv'
+dataFolderDir='FC029'
+outputCSV = 'IBM_FC029R2_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
@@ -44,7 +44,7 @@ allFiles = os.listdir(folderDir)
             # if 'filename' here is given as 'customFunction', then it will call the findBlankXlsx function to look for the blank
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC028R4PI*.xlsx': ['PRMD_IBM_FC028R2.xlsx']
+fileList = {'PR_IBM_FC029R2PI*.xlsx': ['PRMD_IBM_FC029R2.xlsx']
             }
 
 
@@ -159,16 +159,16 @@ for fnSearchSeq, metaInfo in fileList.items():
 
 # For everyfile pattern that matches the filename, look for corresponding metadatafile and blank excel file
 
-metadatafnCore = 'PRMD_IBM_FC028'
-blank_well = 'B02'
+metadatafnCore = 'PRMD_IBM_FC029'
+blank_well = 'H12'
 blank_plate = '1'
 
 fnSearchSeqList = [
-            'PR_IBM_FC021R[2,3,4]*P1.xlsx',
-            'PR_IBM_FC021R[2,3,4]*P2.xlsx',
-            'PR_IBM_FC021R[3,4,5]*P3.xlsx',
-            'PR_IBM_FC021R[4,6,7]*P4.xlsx'
-#            'PR_IBM_FC021R[2-7]*.xlsx'
+            'PR_IBM_FC029R2*.xlsx',
+#            'PR_IBM_FC021R[2,3,4]*P2.xlsx',
+#            'PR_IBM_FC021R[3,4,5]*P3.xlsx',
+#            'PR_IBM_FC021R[4,6,7]*P4.xlsx'
+##            'PR_IBM_FC021R[2-7]*.xlsx'
             ]
 
 #fnSearchSeq = 'PR_IBM_FC021R[2-7]*.xlsx'
