@@ -19,8 +19,8 @@ import fnmatch
 
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC031'
-outputCSV = 'IBM_FC031R1_PRData.csv'
+dataFolderDir='FC028'
+outputCSV = 'IBM_FC028R4_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
@@ -44,7 +44,7 @@ allFiles = os.listdir(folderDir)
             # if 'filename' here is given as 'customFunction', then it will call the findBlankXlsx function to look for the blank
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC031R1PI*.xlsx': ['PRMD_IBM_FC031R1.xlsx']
+fileList = {'PR_IBM_FC028R4PI*.xlsx': ['PRMD_IBM_FC028R2.xlsx']
             }
 
 
