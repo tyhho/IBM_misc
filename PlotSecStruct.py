@@ -3,9 +3,7 @@
 Created on Fri Aug 30 15:58:16 2019
 
 @author: Trevor Ho
-"""
 
-r"""
 Four ways to get the secondary structure of a protein
 =====================================================
 
@@ -111,7 +109,9 @@ class SheetPlotter(graphics.FeaturePlotter):
             color=biotite.colors["orange"], linewidth=0
         ))
 
-length = 207
+
+
+#%%
 # Dictionary to convert 'secStructList' codes to DSSP values
 # https://github.com/rcsb/mmtf/blob/master/spec.md#secstructlist
 sec_struct_codes = {0 : "I",
@@ -141,12 +141,13 @@ mmtf_file.read(file_name)
 array = mmtf.get_structure(mmtf_file, model=1)
 
 # homodimer
-tetR_dimer = array[struc.filter_amino_acids(array)]
+dimer = array[struc.filter_amino_acids(array)]
 # monomer
-tetR_mono = tetR_dimer[tetR_dimer.chain_id == "A"]
+mono = dimer[dimer.chain_id == "A"]
 
 # The chain ID corresponding to each residue
-chain_id_per_res = array.chain_id[struc.get_residue_starts(tetR_dimer)]
+chain_id_per_res = array.chain_id[struc.get_residue_starts(dimer)]
+
 sse = mmtf_file["secStructList"]
 sse = sse[sse != -1]
 sse = sse[chain_id_per_res == "A"]
@@ -160,7 +161,7 @@ sse = np.array([dssp_to_abc[e] for e in sse], dtype="U1")
 # provide the actual first residue ID
 
 
-first_id = tetR_mono.res_id[0]
+first_id = mono.res_id[0]
 def _add_sec_str(annotation, first, last, str_type):
     if str_type == "a":
         str_type = "helix"
@@ -202,4 +203,25 @@ graphics.plot_feature_map(
 )
 
 ax.set_xlim(1, 207)
+fig.tight_layout()
+
+
+#%%
+# Fetch GenBank files of the TK's first chain and extract annotatation
+file_name = entrez.fetch("6FRH_A", biotite.temp_dir(), "gb", "protein", "gb")
+gb_file = gb.GenBankFile()
+gb_file.read(file_name)
+annotation = gb.get_annotation(gb_file, include_only=["SecStr"])
+# Length of the sequence
+_, length, _, _, _, _ = gb.get_locus(gb_file)
+
+fig = plt.figure(figsize=(20.0, 2.0))
+ax = fig.add_subplot(111)
+graphics.plot_feature_map(
+    ax, annotation, symbols_per_line=169,
+    show_numbers=True, show_line_position=True,
+    # 'loc_range' takes exclusive stop -> length+1 is required
+    loc_range=(6,160),
+    feature_plotters=[HelixPlotter(), SheetPlotter()]
+)
 fig.tight_layout()

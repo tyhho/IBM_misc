@@ -65,3 +65,9 @@ filtered_stat_data.reset_index(drop=True, inplace=True)
 filteredStatFN = dataFN.split('.csv')[0] + '_FilteredStats.csv'
 filteredOutputDataFP = os.path.join(dataRootDir,dataFolderDir,filteredStatFN)
 filtered_stat_data.to_csv(filteredOutputDataFP)
+
+#%% Remerge with fluo data
+filtered_fluo_data = fluo_data[~(fluo_data['SampleID'].isin(samples_to_drop))]
+filteredFluoFN = dataFN.split('.csv')[0] + '_Filtered.csv'
+filteredFluoFP = os.path.join(dataRootDir,dataFolderDir,filteredFluoFN)
+filtered_fluo_data.to_csv(filteredFluoFP)

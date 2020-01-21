@@ -25,63 +25,50 @@ sns.reset_defaults
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 
 # TODO: Specify location of CSV file containing identified split sites
-ssFolderDir1 = 'BM005'
-ssFolderDir2 = 'BM005_Sequencing Results'
-ssDataFN = 'IBM_BM005_IdentifiedSplitSites.csv'
+ssFolderDir1 = 'BM009'
+ssFolderDir2 = 'Sequencing Results'
+ssDataFN = 'IBM_BM009_IdentifiedSplitSites.csv'
 
 # TODO: Specify location of CSV file containing the median fluorescence values of the strains
-fluoFolderDir='FC023'
-fluoDataFN = 'IBM_FC023R3-5_FCmedian&metadata&PRData_InductionProcessed_FoldChangeFiltered.csv'
+fluoFolderDir='FC029'
+fluoDataFN = 'IBM_FC029R4,5,7_median&metadata&PRData_InductionRelabelled_Filtered.csv'
 
 # TODO: Specify location of CSV file containing the median fluorescence values of control strains
-ctrlFluoDataFN = 'IBM_FC023R3-5_FCmedianStats&metadata_FoldChangeFiltered.csv'
+ctrlFluoDataFN = 'IBM_FC029R4,5,7_median&metadata&PRData_InductionRelabelled_FilteredStats.csv'
 
 # TODO: Specify filename to be saved. Figure will be saved under path of dataRootDir\ssFolderDir1
-figName = 'IBM_BM005_BisectionMap_Raw.pdf'
+figName = 'IBM_BM009_InsertionMap_Raw.pdf'
 
 # TODO: Specify filename of csv with merged data to be saved (final data saves under BM005 directly)
-mergedDataFN = 'IBM_BM005_PooledResults.csv'
+mergedDataFN = 'IBM_BM009_PooledResults.csv'
 
+hlineInfoFN = 'IBM_FC029R4,5,7_median&metadata&PRData_hlineInfo.csv'
 
 # Preparations
 
 # TODO: Set induction and induction time information
-inductions = ['no induction','1 mM arabinose','25 μM DAPG','1 mM arabinose + 25 μM DAPG']
+inductions = ['+ DMSO','+ 10 μM 4-HT']
 pi_times = [5,24]
 
 # TODO: Update control list
-control_list = ['IBMc252 + IBMc249',
-        'IBMc259 + IBMc249',
-        'IBMc259 + IBMc226']
+control_list = ['IBMc101',
+        'IBMc307']
 
 # TODO: Set x tick labels of controls
-ctrl_tick_labels = ['background','reporter','TetR + reporter']
-
-# TODO: Input information for constructing hlines
-# hline_input instruction:
-    # key = str for df.query. Note that str inside str are double-quoted
-    # value = list of colors to use, 1st color = line color, 2nd color = shade color
-hline_input = {
-        'SampleID == "IBMc252 + IBMc249"': ['k','#E8E8E8'],
-        'SampleID == "IBMc259 + IBMc249"': ['#F96495','#eda3ba'],
-        'SampleID == "IBMc259 + IBMc226" & (Induction == "no induction" | Induction == "25 μM DAPG")': ['#A952A5','#E9D4E9'],
-        'SampleID == "IBMc259 + IBMc226" & (Induction == "1 mM arabinose" | Induction == "1 mM arabinose + 25 μM DAPG")': ['#A952A5','#E9D4E9'],
-        }
+ctrl_tick_labels = ['background','M86']
 
 # TODO: Define how many amino acids are being plotted
 start_aa = 1
-end_aa = 207
+end_aa = 154
 
 # TODO: Input transposition window
-n_trans_border = 21
-c_trans_border = 188
+n_trans_border = 7
+c_trans_border = 148
 
 # TODO: Decide color for inductions
 color_mapper = {
-        'no induction':'#F96495',
-        '1 mM arabinose':'#55A0FB',
-        '25 μM DAPG':'#099963',
-        '1 mM arabinose + 25 μM DAPG':'#1D1D1B'
+        '+ 10 μM 4-HT':'#F96495',
+        '+ DMSO':'#1D1D1B' 
         }
 
 #%%
@@ -99,8 +86,8 @@ fluoData = pd.read_csv(fluoDataDir,index_col=0)
 # Map split site to fluorescence
 mergedData = fluoData.merge(ssData,sort=False)
 # Generate a stripped mergedData set for histogram plot
-mergedDataSingleCon=mergedData[(mergedData['Run']==3) \
-                               & (mergedData['Induction']=='1 mM arabinose') \
+mergedDataSingleCon=mergedData[(mergedData['Run']==4) \
+                               & (mergedData['Induction']=='+ DMSO') \
                                & (mergedData['Post-induction (hrs)']==5)]
 mergedDataSingleCon=mergedDataSingleCon['aa_ss_middle']
 
@@ -129,26 +116,13 @@ for pi_time in pi_times:
 
 # Export the data to keep it somewhere safe
 mergedDataDir = os.path.join(dataRootDir,ssFolderDir1,mergedDataFN)
-#mergedData.to_csv(mergedDataDir)
+# mergedData.to_csv(mergedDataDir)
             
 #%% Calculate stats for hlines
 pi_dict = {1:5, 2:24}
-hline_data = pd.DataFrame(columns=[])
 
-for _, pi_time in pi_dict.items():
-    for queryLine, color in hline_input.items():
-        hRefSubData = fluoData.query(queryLine)
-        hRefSubData = hRefSubData[hRefSubData['Post-induction (hrs)']==pi_time]
-        hRefSubData = hRefSubData['median fluorescence (a.u.)']        
-        hline_data_row_dict = {
-                'Post-induction (hrs)': [pi_time],
-                'mean of median fluorescence (a.u.)': [hRefSubData.mean()],
-                'std of median fluorescence (a.u.)': [hRefSubData.std()],
-                'span for std': [(hRefSubData.std() > hRefSubData.mean()*0.1)],
-                'line color': [color[0]],
-                'shade color': [color[1]]
-                }
-        hline_data = hline_data.append(pd.DataFrame.from_dict(hline_data_row_dict))
+hlineInfoFP = os.path.join(dataRootDir,fluoFolderDir,hlineInfoFN)
+hlineInfo = pd.read_csv(hlineInfoFP,index_col=0)
 
 
 # Import CSV containing control data for plotting
@@ -218,15 +192,18 @@ for col_ax_ID in [0,1]:
         ax[row_ax_ID,col_ax_ID].get_legend().remove() 
                 
         # TODO: Check range of fluorescence
-        ax[row_ax_ID,col_ax_ID].set_ylim(1e2, 3e5)
+        
+        # ax[row_ax_ID,col_ax_ID].set_ylim(1e2, 3e5)
+        
         ax[row_ax_ID,col_ax_ID].set(yscale="log")
+        
         ax[row_ax_ID,col_ax_ID].yaxis.set_ticks(np.logspace(2, 5, num=4))
         locmin = matplotlib.ticker.LogLocator(base=10.0,subs=(0.2,0.4,0.6,0.8),numticks=12)
         ax[row_ax_ID,col_ax_ID].yaxis.set_minor_locator(locmin)       
 
         
         # Plot horizontal lines
-        hline_data_to_plot = hline_data[hline_data['Post-induction (hrs)'] == pi_time]
+        hline_data_to_plot = hlineInfo[hlineInfo['Post-induction (hrs)'] == pi_time]
         
         for hline_data_to_plot_row in hline_data_to_plot.itertuples():
             hline_mean = hline_data_to_plot_row[2]
@@ -269,6 +246,11 @@ for row_ax_ID in [1,2]:
     ax[row_ax_ID,0].set_xticklabels('')
     ax[row_ax_ID,0].set_xlabel('')
 
+ax[1,0].set_ylim(1e2, 1.5e3)
+ax[1,1].set_ylim(1e2, 1.5e3)
+ax[2,0].set_ylim(1e2, 1e4)
+ax[2,1].set_ylim(1e2, 1e4)
+
 # Extra customizations to BM fluorescence plots
 for row_ax_ID in [1,2]:
     ax[row_ax_ID,1].set_xlim(start_aa,end_aa)
@@ -277,16 +259,15 @@ for row_ax_ID in [1,2]:
     ax[row_ax_ID,1].set_ylabel('')
 ax[1,1].set_xticklabels('')
 
+
 # TODO: Customize legend for fluorescence
 # frameon=False removes the frame where the labels were in
 # Get the hue category label and removes it    
 handles, labels = ax[2,1].get_legend_handles_labels()
 labels = [
         '',
-        'no induction',
-        '1 mM arabinose (N-lobe)',
-        '25 μM DAPG (C-lobe)',
-        '1 mM arabinose + 25 μM DAPG (N+C lobes)'
+        '+ DMSO',
+        '+ 10 μM 4-HT'
         ]
 ax[2,1].legend(
         handles=handles[1:], labels=labels[1:],
@@ -331,7 +312,7 @@ for row_ax_ID in [0,1,2]:
 #for col_ax_ID in [0,1]:
 #    for row_ax_ID in [1,2]:
 #        
-#%% Plot the 2nd structure of the protein being split (if available)
+# Plot the 2nd structure of the protein being split (if available)
 # All code below copied and modified directly on top of code from Biotite
 
 # Code source: Patrick Kunzmann
@@ -346,6 +327,9 @@ import biotite.structure.io.mmtf as mmtf
 import biotite.sequence as seq
 import biotite.sequence.graphics as graphics
 import biotite.database.rcsb as rcsb
+import biotite.sequence.io.genbank as gb
+import biotite.database.entrez as entrez
+
 
 # Create 'FeaturePlotter' subclasses
 # for drawing the scondary structure features
@@ -423,101 +407,28 @@ class SheetPlotter(graphics.FeaturePlotter):
             color=biotite.colors["orange"], linewidth=0
         ))
 
-length = 207
-# Dictionary to convert 'secStructList' codes to DSSP values
-# https://github.com/rcsb/mmtf/blob/master/spec.md#secstructlist
-sec_struct_codes = {0 : "I",
-                    1 : "S",
-                    2 : "H",
-                    3 : "E",
-                    4 : "G",
-                    5 : "B",
-                    6 : "T",
-                    7 : "C"}
-# Converter for the DSSP secondary structure elements
-# to the classical ones
-dssp_to_abc = {"I" : "c",
-               "S" : "c",
-               "H" : "a",
-               "E" : "b",
-               "G" : "c",
-               "B" : "b",
-               "T" : "c",
-               "C" : "c"}
 
+#%%
 
-# Fetch and load structure
-file_name = rcsb.fetch("4AC0", "mmtf", biotite.temp_dir())
-mmtf_file = mmtf.MMTFFile()
-mmtf_file.read(file_name)
-array = mmtf.get_structure(mmtf_file, model=1)
-
-# homodimer
-tetR_dimer = array[struc.filter_amino_acids(array)]
-# monomer
-tetR_mono = tetR_dimer[tetR_dimer.chain_id == "A"]
-
-# The chain ID corresponding to each residue
-chain_id_per_res = array.chain_id[struc.get_residue_starts(tetR_dimer)]
-sse = mmtf_file["secStructList"]
-sse = sse[sse != -1]
-sse = sse[chain_id_per_res == "A"]
-sse = np.array([sec_struct_codes[code] for code in sse if code != -1],
-               dtype="U1")
-sse = np.array([dssp_to_abc[e] for e in sse], dtype="U1")
-
-# convert secondary structure array to annotation and visualize it
-# Visualize seconday structure array
-# Sine the residues may not start at 1,
-# provide the actual first residue ID
-
-
-first_id = tetR_mono.res_id[0]
-def _add_sec_str(annotation, first, last, str_type):
-    if str_type == "a":
-        str_type = "helix"
-    elif str_type == "b":
-        str_type = "sheet"
-    else:
-        # coil
-        return
-    feature = seq.Feature(
-        "SecStr", [seq.Location(first, last)], {"sec_str_type" : str_type}
-    )
-    annotation.add_feature(feature)
-
-# Find the intervals for each secondary structure element
-# and add to annotation
-annotation = seq.Annotation()
-curr_sse = None
-curr_start = None
-for i in range(len(sse)):
-    if curr_start is None:
-        curr_start = i
-        curr_sse = sse[i]
-    else:
-        if sse[i] != sse[i-1]:
-            _add_sec_str(
-                annotation, curr_start+first_id, i-1+first_id, curr_sse
-            )
-            curr_start = i
-            curr_sse = sse[i]
-# Add last secondary structure element to annotation
-_add_sec_str(annotation, curr_start+first_id, i-1+first_id, curr_sse)
-
-#fig = plt.figure(figsize=(8.0, 1.0))
-#ax = fig.add_subplot(111)
 ax[4,1] = plt.subplot(gs[4,1])
+
+# Fetch GenBank files of the TK's first chain and extract annotatation
+file_name = entrez.fetch("6FRH_A", biotite.temp_dir(), "gb", "protein", "gb")
+gb_file = gb.GenBankFile()
+gb_file.read(file_name)
+annotation = gb.get_annotation(gb_file, include_only=["SecStr"])
+# Length of the sequence
+_, length, _, _, _, _ = gb.get_locus(gb_file)
+
 graphics.plot_feature_map(
-    ax[4,1], annotation, multi_line=False, loc_range=(1,length+1),
+    ax[4,1], annotation, symbols_per_line=154,
     show_numbers=False, show_line_position=False,
+    # 'loc_range' takes exclusive stop -> length+1 is required
+    loc_range=(7,161),
     feature_plotters=[HelixPlotter(), SheetPlotter()]
 )
 
 ax[4,1].set_xlim(start_aa,end_aa)
-
-#fig.tight_layout()
-
 
 # Make room for plot at the bottom
 plt.gcf().subplots_adjust(hspace=0.15, wspace=0.1)

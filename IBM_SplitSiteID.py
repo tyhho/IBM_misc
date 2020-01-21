@@ -33,7 +33,7 @@ import pandas as pd
     # all .seq files should be in this folder
     # this is also the folder where the output will be deposited
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'BM004'
+dataFolderDir = 'BM009'
 dataFolder2Dir = 'Sequencing Results'
 #seqFile = '450185201_IBMs0161_IBMo0503_A01.ab1' # for debugging
 
@@ -41,7 +41,7 @@ dataFolder2Dir = 'Sequencing Results'
 targetCDS_sequence = 'tgcatctcgggagatagtttgatcagcttggcgagcacagggaaaagagttcctattaaggatttgttaggcgaaaaagattttgaaatatgggcaattaatgaacagacgatgaagctggaatcagctaaagttagtcgtgtattttgtaccggcaaaaagctagtctatactctaaaaactcgactaggtagaactatcaaggcaacagcaaatcatagatttttaactattgatggttggaaaagattagatgagctatctttaaaagagcatattgctctaccccgtaaactagaaagctcctctttacaattggcaccagaaatagaaaagttgcctcagagtgatatttactgggaccccatcgtttctattacggagactggagtcgaagaggtttttgatttgactgtgccaggactacgtaactttgtcgccaatgacatcattgtacataac'
 
 # TODO: Provide the signature sequence. Usually, 50 bp are more than enough
-signature_sequence= 'CCCAGGTTACCGTTAGCCATGGTGGAGGTGGTTCAGGTGGCGGAGGTTCA'
+signature_sequence= 'TGTATGACCTGCTGTTAGAAATGCTGGACGCACATCGTCTGCATGCATCA'
 
 #%% Execution
 ss_output = pd.DataFrame(columns = [])  # set up empty df to store all data
@@ -108,7 +108,7 @@ for file in os.listdir(folderDir):
         ss_dfRow = pd.DataFrame(ss_data,index=[strainID])
         ss_output = ss_output.append(ss_dfRow, sort=True)
 #%% Export output to file
-outputFilename = 'IBM_BM004_IdentifiedSplitSites.csv'
+outputFilename = 'IBM_BM009_IdentifiedSplitSites.csv'
 outputDir = os.path.join(folderDir,outputFilename)
 ss_output.to_csv(outputDir)
 
