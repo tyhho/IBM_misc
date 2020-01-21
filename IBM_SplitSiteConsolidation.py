@@ -133,10 +133,10 @@ ctrlFluoData['SortIndex'] = ctrlFluoData.apply(lambda data: control_list.index(d
 #%%
 # Create canvas
 sns.set(style='ticks')
-fig, ax = plt.subplots(5, 2, sharex=True, sharey=True, figsize=(6, 6), dpi = 200)
+fig, ax = plt.subplots(5, 2, sharex=True, sharey=True, figsize=(4, 6), dpi = 200)
 # Grid spec
 ctrl_len = len(control_list)
-gs = gridspec.GridSpec(5, 2, width_ratios=[ctrl_len+10, end_aa], height_ratios = [0.6,1,1,0.2,0.2]) 
+gs = gridspec.GridSpec(5, 2, width_ratios=[ctrl_len+10, end_aa - start_aa], height_ratios = [0.6,1,1,0.2,0.2]) 
 
 # Delete top-left plot
 fig.delaxes(ax[0,0])
@@ -435,4 +435,4 @@ plt.gcf().subplots_adjust(hspace=0.15, wspace=0.1)
 
 '''Save Figure'''
 outputDir = os.path.join(dataRootDir,ssFolderDir1,figName)
-# fig.savefig(outputDir)
+fig.savefig(outputDir)
