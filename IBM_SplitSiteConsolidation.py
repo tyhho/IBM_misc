@@ -37,7 +37,7 @@ fluoDataFN = 'IBM_FC029R4,5,7_median&metadata&PRData_InductionRelabelled_Filtere
 ctrlFluoDataFN = 'IBM_FC029R4,5,7_median&metadata&PRData_InductionRelabelled_FilteredStats.csv'
 
 # TODO: Specify filename to be saved. Figure will be saved under path of dataRootDir\ssFolderDir1
-figName = 'IBM_BM009_InsertionMap_Raw.pdf'
+figName = 'IBM_BM009_InsertionMap_ZoomedIn_Raw.pdf'
 
 # TODO: Specify filename of csv with merged data to be saved (final data saves under BM005 directly)
 mergedDataFN = 'IBM_BM009_PooledResults.csv'
@@ -58,8 +58,8 @@ control_list = ['IBMc101',
 ctrl_tick_labels = ['background','M86']
 
 # TODO: Define how many amino acids are being plotted
-start_aa = 1
-end_aa = 154
+start_aa = 70
+end_aa = 125
 
 # TODO: Input transposition window
 n_trans_border = 7
@@ -435,4 +435,4 @@ plt.gcf().subplots_adjust(hspace=0.15, wspace=0.1)
 
 '''Save Figure'''
 outputDir = os.path.join(dataRootDir,ssFolderDir1,figName)
-fig.savefig(outputDir)
+# fig.savefig(outputDir)
