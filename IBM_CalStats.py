@@ -13,12 +13,13 @@ import pandas as pd
     # csv file containing data to be plotted should be in this folder
 
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC029'
-dataFN = 'IBM_FC029R4,5,7_median&metadata&PRData_InductionRelabelled.csv'
+dataFolderDir='FC033'
+dataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled.csv'
 statFN = dataFN.split('.csv')[0] + '_Stats.csv'
 
 # TODO: Set induction and induction time information
-inductions = ['+ DMSO','+ 10 μM 4-HT']
+# inductions = ['+ DMSO','+ 10 μM 4-HT']
+inductions = ['no induction','1 mM arabinose','25 μM DAPG','1 mM arabinose + 25 μM DAPG']
 pi_times = [5,24]
 
 # Read data
@@ -50,7 +51,7 @@ stat_data.to_csv(outputDataFP)
 
 # Single out criteria for filtering
 
-pi24_data = stat_data[(stat_data['Post-induction (hrs)'] ==24) & (stat_data['Induction'] == '+ 10 μM 4-HT')]
+pi24_data = stat_data[(stat_data['Post-induction (hrs)'] ==24) & (stat_data['Induction'] == '1 mM arabinose + 25 μM DAPG')]
 pi24_data['cv'] = pi24_data['std of median fluorescence (a.u.)'] / pi24_data['mean of median fluorescence (a.u.)']
 
 cv_threshold = 0.4

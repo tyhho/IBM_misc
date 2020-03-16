@@ -21,11 +21,11 @@ sns.reset_defaults
     # csv file containing data to be plotted should be in this folder
 
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC029'
-statDataFN = 'IBM_FC029R4,5,7_median&metadata&PRData_InductionRelabelled_Stats.csv'
+dataFolderDir='FC033'
+statDataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled_Stats.csv'
 
-hlineInfoFN = 'IBM_FC029R4,5,7_median&metadata&PRData_hlineInfo.csv'
-figName = 'IBM_FC029R4,5,7_Result.pdf'
+hlineInfoFN = 'IBM_FC033R1,4,5_median&metadata&PRData_hlineInfo.csv'
+figName = 'IBM_FC033R1,4,5_Result.pdf'
 
 # Read data
 statDataFP = os.path.join(dataRootDir,dataFolderDir,statDataFN)
@@ -34,22 +34,24 @@ hlineInfoFP = os.path.join(dataRootDir,dataFolderDir,hlineInfoFN)
 hlineInfo = pd.read_csv(hlineInfoFP,index_col=0)
 
 # TODO: Set induction and induction time information
-inductions = ['+ DMSO','+ 10 μM 4-HT']
+inductions = ['no induction','1 mM arabinose','25 μM DAPG','1 mM arabinose + 25 μM DAPG']
 pi_times = [5,24]
 
 #%%
 ## Order the data from highest to lowest fluorescence based on induced fluorescence of PI24
 
 # TODO: Update control list
-control_list = ['IBMc101',
-        'IBMc307']
+control_list = ['IBMc186 + IBMc101',
+                'IBMc120 + IBMc101',
+                'IBMc120 + IBMc071'
+                ]
 # TODO: Set x tick labels of controls
-ctrl_tick_labels = ['background','M86']
+ctrl_tick_labels = ['background','reporter','ECF20']
 
 # Take out control data for ordering and focus on PI24 when induced
 # TODO: Inspect data and set up criteria for ordering
 ordered_df = statData[(~statData['SampleID'].isin(control_list)) & (statData['Post-induction (hrs)']==24) & \
-               (statData['Induction']=='+ 10 μM 4-HT')]
+               (statData['Induction']=='1 mM arabinose + 25 μM DAPG')]
 
 # Keep only the median fluorescence column for sorting
 ordered_df = ordered_df[['SampleID','mean of median fluorescence (a.u.)']]
@@ -80,10 +82,12 @@ fig, ax = plt.subplots(2, 2, sharex=True, sharey=True, figsize=(8, 6), dpi = 200
 
 # TODO: Decide color for inductions
 color_mapper = {
-        '+ 10 μM 4-HT':'#F96495',
-        # '1 mM arabinose':'#55A0FB',
-        # '25 μM DAPG':'#099963',
-        '+ DMSO':'#1D1D1B' ,
+        # '+ 10 μM 4-HT':'#F96495',
+        # '+ DMSO':'#1D1D1B' ,
+        'no induction':'#1D1D1B',
+        '1 mM arabinose':'#55A0FB',
+        '25 μM DAPG':'#099963',
+        '1 mM arabinose + 25 μM DAPG':'#F96495' ,
         }
 
 # Calculate width ratio by number of elements
@@ -116,9 +120,11 @@ for col_ax_ID in [0,1]:
         
         # TODO: set y axis limits
         if row_ax_ID == 0:
-            ax[row_ax_ID,col_ax_ID].set_ylim(1e2, 1.5e3)
+            # ax[row_ax_ID,col_ax_ID].set_ylim(1e2, 1.5e3)
+            ax[row_ax_ID,col_ax_ID].set_ylim(1e2, 1e5)
         elif row_ax_ID == 1:
-            ax[row_ax_ID,col_ax_ID].set_ylim(1e2, 1e4)
+            # ax[row_ax_ID,col_ax_ID].set_ylim(1e2, 1e4)
+            ax[row_ax_ID,col_ax_ID].set_ylim(1e2, 1e5)
        
         ax[row_ax_ID,col_ax_ID].set_xlabel('')
         ax[row_ax_ID,col_ax_ID].set_xticklabels('')
@@ -159,11 +165,14 @@ for col_ax_ID in [0,1]:
 handles, labels = ax[0,1].get_legend_handles_labels()
 labels = [
         '',
-        '+ DMSO',
-        # '1 mM arabinose (N-lobe)',
-        # '25 μM DAPG (C-lobe)',
-        '+ 10 μM 4-HT'
+        # '+ DMSO',
+        # '+ 10 μM 4-HT'
+        'no induction',
+        '1 mM arabinose (N-lobe)',
+        '25 μM DAPG (C-lobe)',
+        '1 mM arabinose + 25 μM DAPG (N+C lobes)'        
         ]
+
 ax[1,1].legend(
         handles=handles[1:], labels=labels[1:],
       bbox_to_anchor=(1, -0.05),frameon=False, ncol=2,
@@ -186,9 +195,11 @@ ax[1,0].set_ylabel('24 hours')
 ax[1,0].set_xticklabels(ctrl_tick_labels, rotation=40, fontsize=10, ha="right")
 
 # TODO: adjust label of y axis
-ax[1,0].text(-3, 1500, 'median fluorescence (a.u.)', fontsize=12, rotation=90)
+# ax[1,0].text(-3, 1500, 'median fluorescence (a.u.)', fontsize=12, rotation=90)
+ax[1,0].text(-7, 1500, 'median fluorescence (a.u.)', fontsize=12, rotation=90)
 
 # TODO: adjust plot
+# plt.gcf().subplots_adjust(bottom=0.3, hspace=0.1, wspace=0.05)
 plt.gcf().subplots_adjust(bottom=0.3, hspace=0.1, wspace=0.05)
 
 '''Save Figure'''

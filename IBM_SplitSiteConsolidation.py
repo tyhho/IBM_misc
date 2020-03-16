@@ -25,51 +25,65 @@ sns.reset_defaults
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 
 # TODO: Specify location of CSV file containing identified split sites
-ssFolderDir1 = 'BM009'
+ssFolderDir1 = 'BM010'
 ssFolderDir2 = 'Sequencing Results'
-ssDataFN = 'IBM_BM009_IdentifiedSplitSites.csv'
+ssDataFN = 'IBM_BM010_IdentifiedSplitSites.csv'
 
 # TODO: Specify location of CSV file containing the median fluorescence values of the strains
-fluoFolderDir='FC029'
-fluoDataFN = 'IBM_FC029R4,5,7_median&metadata&PRData_InductionRelabelled_Filtered.csv'
+fluoFolderDir='FC033'
+fluoDataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled.csv'
 
 # TODO: Specify location of CSV file containing the median fluorescence values of control strains
-ctrlFluoDataFN = 'IBM_FC029R4,5,7_median&metadata&PRData_InductionRelabelled_FilteredStats.csv'
+ctrlFluoDataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled_Stats.csv'
 
 # TODO: Specify filename to be saved. Figure will be saved under path of dataRootDir\ssFolderDir1
-figName = 'IBM_BM009_InsertionMap_ZoomedIn_Raw.pdf'
+figName = 'IBM_BM010_InsertionMap_Raw.pdf'
 
 # TODO: Specify filename of csv with merged data to be saved (final data saves under BM005 directly)
-mergedDataFN = 'IBM_BM009_PooledResults.csv'
+mergedDataFN = 'IBM_BM10_PooledResults.csv'
 
-hlineInfoFN = 'IBM_FC029R4,5,7_median&metadata&PRData_hlineInfo.csv'
+hlineInfoFN = 'IBM_FC033R1,4,5_median&metadata&PRData_hlineInfo.csv'
 
 # Preparations
 
 # TODO: Set induction and induction time information
-inductions = ['+ DMSO','+ 10 μM 4-HT']
+# inductions = ['+ DMSO','+ 10 μM 4-HT']
+inductions = ['no induction','1 mM arabinose','25 μM DAPG','1 mM arabinose + 25 μM DAPG']
 pi_times = [5,24]
 
 # TODO: Update control list
-control_list = ['IBMc101',
-        'IBMc307']
+# control_list = ['IBMc101',
+#         'IBMc307']
+control_list = ['IBMc186 + IBMc101',
+                'IBMc120 + IBMc101',
+                'IBMc120 + IBMc071'
+                ]
 
 # TODO: Set x tick labels of controls
 ctrl_tick_labels = ['background','M86']
 
 # TODO: Define how many amino acids are being plotted
-start_aa = 70
-end_aa = 125
+start_aa = 1
+end_aa = 193
 
 # TODO: Input transposition window
-n_trans_border = 7
-c_trans_border = 148
+# n_trans_border = 7
+# c_trans_border = 148
+n_trans_border = 6
+c_trans_border = 188
 
 # TODO: Decide color for inductions
+# color_mapper = {
+#         '+ 10 μM 4-HT':'#F96495',
+#         '+ DMSO':'#1D1D1B' 
+#         }
 color_mapper = {
-        '+ 10 μM 4-HT':'#F96495',
-        '+ DMSO':'#1D1D1B' 
+        'no induction':'#1D1D1B',
+        '1 mM arabinose':'#55A0FB',
+        '25 μM DAPG':'#099963',
+        '1 mM arabinose + 25 μM DAPG':'#F96495' ,
         }
+
 
 #%%
 '''Read data and map split sites to function'''
@@ -116,7 +130,7 @@ for pi_time in pi_times:
 
 # Export the data to keep it somewhere safe
 mergedDataDir = os.path.join(dataRootDir,ssFolderDir1,mergedDataFN)
-# mergedData.to_csv(mergedDataDir)
+mergedData.to_csv(mergedDataDir)
             
 #%% Calculate stats for hlines
 pi_dict = {1:5, 2:24}
@@ -246,10 +260,15 @@ for row_ax_ID in [1,2]:
     ax[row_ax_ID,0].set_xticklabels('')
     ax[row_ax_ID,0].set_xlabel('')
 
-ax[1,0].set_ylim(1e2, 1.5e3)
-ax[1,1].set_ylim(1e2, 1.5e3)
-ax[2,0].set_ylim(1e2, 1e4)
-ax[2,1].set_ylim(1e2, 1e4)
+# ax[1,0].set_ylim(1e2, 1.5e3)
+# ax[1,1].set_ylim(1e2, 1.5e3)
+# ax[2,0].set_ylim(1e2, 1e4)
+# ax[2,1].set_ylim(1e2, 1e4)
+
+ax[1,0].set_ylim(1e2, 1e5)
+ax[1,1].set_ylim(1e2, 1e5)
+ax[2,0].set_ylim(1e2, 1e5)
+ax[2,1].set_ylim(1e2, 1e5)
 
 # Extra customizations to BM fluorescence plots
 for row_ax_ID in [1,2]:
@@ -264,10 +283,19 @@ ax[1,1].set_xticklabels('')
 # frameon=False removes the frame where the labels were in
 # Get the hue category label and removes it    
 handles, labels = ax[2,1].get_legend_handles_labels()
+# labels = [
+#         '',
+#         '+ DMSO',
+#         '+ 10 μM 4-HT'
+#         ]
 labels = [
         '',
-        '+ DMSO',
-        '+ 10 μM 4-HT'
+        # '+ DMSO',
+        # '+ 10 μM 4-HT'
+        'no induction',
+        '1 mM arabinose (N-lobe)',
+        '25 μM DAPG (C-lobe)',
+        '1 mM arabinose + 25 μM DAPG (N+C lobes)'        
         ]
 ax[2,1].legend(
         handles=handles[1:], labels=labels[1:],
@@ -307,6 +335,8 @@ for row_ax_ID in [0,1,2]:
     ax[row_ax_ID,1].xaxis.set_minor_locator(minorLocator)
     
     ax[row_ax_ID,1].set_xlim(start_aa,end_aa)
+
+#%%
 
 ## TODO: Extra y ticks
 #for col_ax_ID in [0,1]:

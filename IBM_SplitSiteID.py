@@ -33,15 +33,16 @@ import pandas as pd
     # all .seq files should be in this folder
     # this is also the folder where the output will be deposited
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'BM009'
+dataFolderDir = 'BM010'
 dataFolder2Dir = 'Sequencing Results'
 #seqFile = '450185201_IBMs0161_IBMo0503_A01.ab1' # for debugging
 
 # TODO: Provide the CDS sequence of the protein to align to
-targetCDS_sequence = 'tgcatctcgggagatagtttgatcagcttggcgagcacagggaaaagagttcctattaaggatttgttaggcgaaaaagattttgaaatatgggcaattaatgaacagacgatgaagctggaatcagctaaagttagtcgtgtattttgtaccggcaaaaagctagtctatactctaaaaactcgactaggtagaactatcaaggcaacagcaaatcatagatttttaactattgatggttggaaaagattagatgagctatctttaaaagagcatattgctctaccccgtaaactagaaagctcctctttacaattggcaccagaaatagaaaagttgcctcagagtgatatttactgggaccccatcgtttctattacggagactggagtcgaagaggtttttgatttgactgtgccaggactacgtaactttgtcgccaatgacatcattgtacataac'
+targetCDS_sequence = 'atgaatgaaaccgatcctgatctggaactgctgaaacgtattggtaataatgatgcacaggccgttaaagaaatggttacccgtaaactgcctcgtctgctggcactggcaagtcgcctgctgggtgatgcagatgaagcacgtgatattgcacaagaaagttttctgcgcatttggaaacaggcagcaagctggcgtagcgaacaggcacgttttgatacctggctgcatcgtgttgcactgaatctgtgttatgatcgtctgcgtcgtcgtaaagaacatgtgccggttgatagcgaacatgcctgtgaagcactggatacccgtccggcaccggatgaacagctggaagcaagcgcacagagccgtcgtatggcacaggcactggatcagctgccggatcgtcagcgtgaagcaattgttctgcagtattatcaagaactgagcaataccgaagcagcagcactgatgcaaattagcgttgaagccctggaaagcctgctgagccgtgcacgtcgtaatctgcgtagccatctggccgaagcaccgggtgcagatctgagcggtcgtcgcaaaccg'
 
 # TODO: Provide the signature sequence. Usually, 50 bp are more than enough
-signature_sequence= 'TGTATGACCTGCTGTTAGAAATGCTGGACGCACATCGTCTGCATGCATCA'
+# signature_sequence= 'TGTATGACCTGCTGTTAGAAATGCTGGACGCACATCGTCTGCATGCATCA' # signature sequence for BM009
+signature_sequence= 'gccaggactacgtaactttgtcgccaatgacatcattgtacataacTCA' # signature sequence for BM010 & BM011
 
 #%% Execution
 ss_output = pd.DataFrame(columns = [])  # set up empty df to store all data
@@ -80,6 +81,7 @@ for file in os.listdir(folderDir):
             sig_start,sig_end = alignment[0].path[0][0], alignment[0].path[1][0]    
             # Extract the bp that would correspond to the target CDS
             ex_seq = record.seq[sig_end:]   # Note: no need to +1 here because the indexing of strings starts from 0
+            ex_seq = ex_seq[0:31] # Only take the first 30 bp of sequence to improve hit result
             # Perform local alignment between the extracted sequence and the target CDS sequence
             targetCDS = Seq(targetCDS_sequence) # import the targetCDS sequence as a Seq.Seq object
             alignment = aligner.align(targetCDS,ex_seq)
@@ -108,7 +110,7 @@ for file in os.listdir(folderDir):
         ss_dfRow = pd.DataFrame(ss_data,index=[strainID])
         ss_output = ss_output.append(ss_dfRow, sort=True)
 #%% Export output to file
-outputFilename = 'IBM_BM009_IdentifiedSplitSites.csv'
+outputFilename = 'IBM_BM010_IdentifiedSplitSites.csv'
 outputDir = os.path.join(folderDir,outputFilename)
 ss_output.to_csv(outputDir)
 

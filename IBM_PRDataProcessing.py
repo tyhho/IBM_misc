@@ -19,8 +19,8 @@ import fnmatch
 
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC032'
-outputCSV = 'IBM_FC032_PRData.csv'
+dataFolderDir='FC033'
+outputCSV = 'IBM_FC033R1,4,5_PRData.csv'
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
@@ -44,7 +44,10 @@ allFiles = os.listdir(folderDir)
             # if 'filename' here is given as 'customFunction', then it will call the findBlankXlsx function to look for the blank
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC032R2*.xlsx': ['PRMD_IBM_FC032R2.xlsx']
+fileList = {'PR_IBM_FC033R[1,4,5]*P1.xlsx': ['PRMD_IBM_FC033P1.xlsx'],
+            'PR_IBM_FC033R[1,4,5]*P2.xlsx': ['PRMD_IBM_FC033P2.xlsx'],
+            'PR_IBM_FC033R[1,4,5]*P3.xlsx': ['PRMD_IBM_FC033P3.xlsx'],
+            'PR_IBM_FC033R[1,4,5]*P4.xlsx': ['PRMD_IBM_FC033P4.xlsx']
             }
 
 
@@ -119,7 +122,7 @@ for fnSearchSeq, metaInfo in fileList.items():
                                  'Raw Data (584 2)': 'PR_Corrected Red Fluorescence (a.u.)'}, inplace=True)
             # Drop any possible remaining blank data
             if from_meta_blank_list:
-                data = data.drop(from_meta_blank_listk_list,axis=0)
+                data = data.drop(from_meta_blank_list,axis=0)
         
         # Add extra metadata based on info in filename
         # Extract information from filename
