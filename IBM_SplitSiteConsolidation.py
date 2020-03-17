@@ -9,12 +9,13 @@ Then plot everything on a graph
 """
 
 import os
+import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 from matplotlib.ticker import AutoMinorLocator, FormatStrFormatter, LogLocator, MultipleLocator
 from matplotlib import gridspec
-import numpy as np
+import IBM_SSP as ssp
 
 import matplotlib
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -37,10 +38,10 @@ fluoDataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled.csv'
 ctrlFluoDataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled_Stats.csv'
 
 # TODO: Specify filename to be saved. Figure will be saved under path of dataRootDir\ssFolderDir1
-figName = 'IBM_BM010_InsertionMap_Raw.pdf'
+figName = 'IBM_BM010_BisectionMap_Raw.pdf'
 
 # TODO: Specify filename of csv with merged data to be saved (final data saves under BM005 directly)
-mergedDataFN = 'IBM_BM10_PooledResults.csv'
+mergedDataFN = 'IBM_BM010_PooledResults.csv'
 
 hlineInfoFN = 'IBM_FC033R1,4,5_median&metadata&PRData_hlineInfo.csv'
 
@@ -60,7 +61,8 @@ control_list = ['IBMc186 + IBMc101',
                 ]
 
 # TODO: Set x tick labels of controls
-ctrl_tick_labels = ['background','M86']
+ctrl_tick_labels = ['background','reporter','ECF20']
+# ctrl_tick_labels = ['background','M86']
 
 # TODO: Define how many amino acids are being plotted
 start_aa = 1
@@ -100,9 +102,12 @@ fluoData = pd.read_csv(fluoDataDir,index_col=0)
 # Map split site to fluorescence
 mergedData = fluoData.merge(ssData,sort=False)
 # Generate a stripped mergedData set for histogram plot
-mergedDataSingleCon=mergedData[(mergedData['Run']==4) \
-                               & (mergedData['Induction']=='+ DMSO') \
+mergedDataSingleCon=mergedData[(mergedData['Run']==1) \
+                               & (mergedData['Induction']=='no induction') \
                                & (mergedData['Post-induction (hrs)']==5)]
+# mergedDataSingleCon=mergedData[(mergedData['Run']==4) \
+#                            & (mergedData['Induction']=='+ DMSO') \
+#                            & (mergedData['Post-induction (hrs)']==5)]
 mergedDataSingleCon=mergedDataSingleCon['aa_ss_middle']
 
 '''Loop through the amino acid split sites and consolidate median fluorescence'''
@@ -138,7 +143,6 @@ pi_dict = {1:5, 2:24}
 hlineInfoFP = os.path.join(dataRootDir,fluoFolderDir,hlineInfoFN)
 hlineInfo = pd.read_csv(hlineInfoFP,index_col=0)
 
-
 # Import CSV containing control data for plotting
 ctrlFluoDataDir = os.path.join(dataRootDir,fluoFolderDir,ctrlFluoDataFN)
 ctrlFluoData = pd.read_csv(ctrlFluoDataDir,index_col=0)
@@ -147,7 +151,7 @@ ctrlFluoData['SortIndex'] = ctrlFluoData.apply(lambda data: control_list.index(d
 #%%
 # Create canvas
 sns.set(style='ticks')
-fig, ax = plt.subplots(5, 2, sharex=True, sharey=True, figsize=(4, 6), dpi = 200)
+fig, ax = plt.subplots(5, 2, sharex=True, sharey=True, figsize=(6, 6), dpi = 200)
 # Grid spec
 ctrl_len = len(control_list)
 gs = gridspec.GridSpec(5, 2, width_ratios=[ctrl_len+10, end_aa - start_aa], height_ratios = [0.6,1,1,0.2,0.2]) 
@@ -295,7 +299,7 @@ labels = [
         'no induction',
         '1 mM arabinose (N-lobe)',
         '25 μM DAPG (C-lobe)',
-        '1 mM arabinose + 25 μM DAPG (N+C lobes)'        
+        '1 mM arabinose + \n 25 μM DAPG (N+C lobes)'        
         ]
 ax[2,1].legend(
         handles=handles[1:], labels=labels[1:],
@@ -341,124 +345,38 @@ for row_ax_ID in [0,1,2]:
 ## TODO: Extra y ticks
 #for col_ax_ID in [0,1]:
 #    for row_ax_ID in [1,2]:
-#        
-# Plot the 2nd structure of the protein being split (if available)
-# All code below copied and modified directly on top of code from Biotite
 
-# Code source: Patrick Kunzmann
-# License: BSD 3 clause
-
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
-import biotite
-import biotite.structure as struc
-import biotite.structure.io.mmtf as mmtf
-import biotite.sequence as seq
 import biotite.sequence.graphics as graphics
-import biotite.database.rcsb as rcsb
-import biotite.sequence.io.genbank as gb
-import biotite.database.entrez as entrez
-
-
-# Create 'FeaturePlotter' subclasses
-# for drawing the scondary structure features
-
-class HelixPlotter(graphics.FeaturePlotter):
-
-    def __init__(self):
-        pass
-
-    # Check whether this class is applicable for drawing a feature
-    def matches(self, feature):
-        if feature.key == "SecStr":
-            if "sec_str_type" in feature.qual:
-                if feature.qual["sec_str_type"] == "helix":
-                    return True
-        return False
-    
-    # The drawing function itself
-    def draw(self, axes, feature, bbox, loc, style_param):
-        # Approx. 1 turn per 3.6 residues to resemble natural helix
-        n_turns = np.ceil((loc.last - loc.first + 1) / 3.6)
-        x_val = np.linspace(0, n_turns * 2*np.pi, 100)
-        # Curve ranges from 0.3 to 0.7
-        y_val = (-0.4*np.sin(x_val) + 1) / 2
-        
-        # Transform values for correct location in feature map
-        x_val *= bbox.width / (n_turns * 2*np.pi)
-        x_val += bbox.x0
-        y_val *= bbox.height
-        y_val += bbox.y0
-        
-        # Draw white background to overlay the guiding line
-        background = Rectangle(
-            bbox.p0, bbox.width, bbox.height, color="white", linewidth=0
-        )
-        axes.add_patch(background)
-        axes.plot(
-            x_val, y_val, linewidth=1, color=biotite.colors["dimgreen"]
-        )
-
-
-class SheetPlotter(graphics.FeaturePlotter):
-
-    def __init__(self, head_width=0.8, tail_width=0.5):
-        self._head_width = head_width
-        self._tail_width = tail_width
-
-
-    def matches(self, feature):
-        if feature.key == "SecStr":
-            if "sec_str_type" in feature.qual:
-                if feature.qual["sec_str_type"] == "sheet":
-                    return True
-        return False
-    
-    def draw(self, axes, feature, bbox, loc, style_param):
-        x = bbox.x0
-        y = bbox.y0 + bbox.height/2
-        dx = bbox.width
-        dy = 0
-        
-        if  loc.defect & seq.Location.Defect.MISS_RIGHT:
-            # If the feature extends into the prevoius or next line
-            # do not draw an arrow head
-            draw_head = False
-        else:
-            draw_head = True
-        
-        axes.add_patch(biotite.AdaptiveFancyArrow(
-            x, y, dx, dy,
-            self._tail_width*bbox.height, self._head_width*bbox.height,
-            # Create head with 90 degrees tip
-            # -> head width/length ratio = 1/2
-            head_ratio=0.5, draw_head=draw_head,
-            color=biotite.colors["orange"], linewidth=0
-        ))
-
-
-#%%
-
 ax[4,1] = plt.subplot(gs[4,1])
 
-# Fetch GenBank files of the TK's first chain and extract annotatation
-file_name = entrez.fetch("6FRH_A", biotite.temp_dir(), "gb", "protein", "gb")
-gb_file = gb.GenBankFile()
-gb_file.read(file_name)
-annotation = gb.get_annotation(gb_file, include_only=["SecStr"])
-# Length of the sequence
-_, length, _, _, _, _ = gb.get_locus(gb_file)
+#%% Used if 3D structure is solved and available for plotting secondary structure
+
+# annotation = ssp.fetch_gb_annotation(pdb_chain="6FRH_A")
+
+# graphics.plot_feature_map(
+#     ax[4,1], annotation, multi_line=False,
+#     show_numbers=False, show_line_position=False,
+#     # 'loc_range' takes exclusive stop -> length+1 is required
+#     loc_range=(7,161),
+#     feature_plotters=[ssp.HelixPlotter(), ssp.SheetPlotter()]
+# )
+
+
+#%% Used if 3D structure is not available and secondary structure inferred from model
+
+exported_ss_path = os.path.join(dataRootDir,ssFolderDir1,'ECF20_structure_model','ECF20_ExPASy_sec_struct.csv')
+
+annotation = ssp.ss_csv_to_annotation(csv_path=exported_ss_path)
 
 graphics.plot_feature_map(
-    ax[4,1], annotation, symbols_per_line=154,
+    ax[4,1], annotation, multi_line=False,
     show_numbers=False, show_line_position=False,
     # 'loc_range' takes exclusive stop -> length+1 is required
-    loc_range=(7,161),
-    feature_plotters=[HelixPlotter(), SheetPlotter()]
+    loc_range=(1,194),
+    feature_plotters=[ssp.HelixPlotter(), ssp.SheetPlotter()]
 )
 
-ax[4,1].set_xlim(start_aa,end_aa)
+# ax[4,1].set_xlim(start_aa,end_aa)
 
 # Make room for plot at the bottom
 plt.gcf().subplots_adjust(hspace=0.15, wspace=0.1)

@@ -34,8 +34,8 @@ from matplotlib.patches import Rectangle
 
 
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='BM011\SrpR_structure_model'
-exported_ss = pd.read_csv(os.path.join(dataRootDir,dataFolderDir,'SrpR_ExPASy_sec_struct.csv'))
+dataFolderDir='BM010\ECF20_structure_model'
+exported_ss = pd.read_csv(os.path.join(dataRootDir,dataFolderDir,'ECF20_ExPASy_sec_struct.csv'))
 ss_segments = pd.DataFrame()
 
 # Take info for the first ss segment without knowing when it ends
@@ -173,7 +173,15 @@ class SheetPlotter(graphics.FeaturePlotter):
 fig = plt.figure(figsize=(8.0, 0.8))
 ax = fig.add_subplot(111)
 graphics.plot_feature_map(
-    ax, annotation, multi_line=False, loc_range=(1,seq_end_aa),
+    ax, annotation, multi_line=False, loc_range=(1,194),
     # Register our drawing functions
     feature_plotters=[HelixPlotter(), SheetPlotter()]
 )
+
+# graphics.plot_feature_map(
+#     ax[4,1], annotation, multi_line=False,
+#     show_numbers=False, show_line_position=False,
+#     # 'loc_range' takes exclusive stop -> length+1 is required
+#     loc_range=(1,194),
+#     feature_plotters=[HelixPlotter(), SheetPlotter()]
+# )
