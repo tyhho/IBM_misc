@@ -19,8 +19,10 @@ import fnmatch
 
 # TODO: Specify folder location
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC033'
-outputCSV = 'IBM_FC033R1,4,5_PRData.csv'
+dataFolderDir='FC034'
+outputCSV = 'IBM_FC034R1-5_PRData.csv'
+# outputCSV = 'IBM_FC033R1,4,5_PRData.csv'
+
 
 # TODO: Prepare file of metadata
 # Check that the blank well has been labeled as "Blank"
@@ -163,17 +165,28 @@ for fnSearchSeq, metaInfo in fileList.items():
 
 # For everyfile pattern that matches the filename, look for corresponding metadatafile and blank excel file
 
-metadatafnCore = 'PRMD_IBM_FC029R4'
-blank_well = 'H12'
+# metadatafnCore = 'PRMD_IBM_FC029R4'
+metadatafnCore = 'PRMD_IBM_FC034'
+blank_well = 'B02'
 blank_plate = '1'
 
 fnSearchSeqList = [
-            'PR_IBM_FC029R[4,5,7]*.xlsx',
+            'PR_IBM_FC034R[2-4]*P1.xlsx',
+            'PR_IBM_FC034R[1-3]*P[2-5].xlsx',
 #            'PR_IBM_FC021R[2,3,4]*P2.xlsx',
 #            'PR_IBM_FC021R[3,4,5]*P3.xlsx',
 #            'PR_IBM_FC021R[4,6,7]*P4.xlsx'
-##            'PR_IBM_FC021R[2-7]*.xlsx'
+#            'PR_IBM_FC021R[2-7]*.xlsx'
             ]
+
+# fnSearchSeqList = [
+#             'PR_IBM_FC029R[4,5,7]*.xlsx',
+#            'PR_IBM_FC021R[2,3,4]*P2.xlsx',
+#            'PR_IBM_FC021R[3,4,5]*P3.xlsx',
+#            'PR_IBM_FC021R[4,6,7]*P4.xlsx'
+#            'PR_IBM_FC021R[2-7]*.xlsx'
+            # ]
+
 
 #fnSearchSeq = 'PR_IBM_FC021R[2-7]*.xlsx'
 
@@ -315,3 +328,7 @@ Strategy:
 # Save file as CSV
 csvDir = os.path.join(folderDir,outputCSV)
 alldata.to_csv(csvDir)
+
+json_fn = outputCSV[:-4] + ".json"
+json_path = os.path.join(folderDir,json_fn)
+alldata.to_json(json_path)

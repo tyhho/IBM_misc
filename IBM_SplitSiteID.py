@@ -33,12 +33,12 @@ import pandas as pd
     # all .seq files should be in this folder
     # this is also the folder where the output will be deposited
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'BM010'
+dataFolderDir = 'BM011'
 dataFolder2Dir = 'Sequencing Results'
 #seqFile = '450185201_IBMs0161_IBMo0503_A01.ab1' # for debugging
 
 # TODO: Provide the CDS sequence of the protein to align to
-targetCDS_sequence = 'atgaatgaaaccgatcctgatctggaactgctgaaacgtattggtaataatgatgcacaggccgttaaagaaatggttacccgtaaactgcctcgtctgctggcactggcaagtcgcctgctgggtgatgcagatgaagcacgtgatattgcacaagaaagttttctgcgcatttggaaacaggcagcaagctggcgtagcgaacaggcacgttttgatacctggctgcatcgtgttgcactgaatctgtgttatgatcgtctgcgtcgtcgtaaagaacatgtgccggttgatagcgaacatgcctgtgaagcactggatacccgtccggcaccggatgaacagctggaagcaagcgcacagagccgtcgtatggcacaggcactggatcagctgccggatcgtcagcgtgaagcaattgttctgcagtattatcaagaactgagcaataccgaagcagcagcactgatgcaaattagcgttgaagccctggaaagcctgctgagccgtgcacgtcgtaatctgcgtagccatctggccgaagcaccgggtgcagatctgagcggtcgtcgcaaaccg'
+targetCDS_sequence = 'ATGGCACGTAAAACCGCAGCAGAAGCAGAAGAAACCCGTCAGCGTATTATTGATGCAGCACTGGAAGTTTTTGTTGCACAGGGTGTTAGTGATGCAACCCTGGATCAGATTGCACGTAAAGCCGGTGTTACCCGTGGTGCAGTTTATTGGCATTTTAATGGTAAACTGGAAGTTCTGCAAGCAGTTCTGGCAAGCCGTCAGCATCCGCTGGAACTGGATTTTACACCGGATCTGGGTATTGAACGTAGCTGGGAAGCAGTTGTTGTTGCAATGCTGGATGCAGTTCATAGTCCGCAGAGCAAACAGTTTAGCGAAATTCTGATTTATCAGGGTCTGGATGAAAGCGGTCTGATTCATAATCGTATGGTTCAGGCAAGCGATCGTTTTCTGCAATATATTCATCAGGTTCTGCGTCATGCAGTTACCCAGGGTGAACTGCCGATTAATCTGGATCTGCAAACCAGCATTGGTGTTTTTAAAGGTCTGATTACCGGTCTGCTGTATGAAGGTCTGCGTAGCAAAGATCAGCAGGCACAGATTATCAAAGTTGCACTGGGTAGCTTTTGGGCACTGCTGCGTGAACCGCCTCGTTTTCTGCTGTGTGAAGAAGCACAGATTAAACAGGTGAAATCCTTCGAA'
 
 # TODO: Provide the signature sequence. Usually, 50 bp are more than enough
 # signature_sequence= 'TGTATGACCTGCTGTTAGAAATGCTGGACGCACATCGTCTGCATGCATCA' # signature sequence for BM009
@@ -110,7 +110,7 @@ for file in os.listdir(folderDir):
         ss_dfRow = pd.DataFrame(ss_data,index=[strainID])
         ss_output = ss_output.append(ss_dfRow, sort=True)
 #%% Export output to file
-outputFilename = 'IBM_BM010_IdentifiedSplitSites.csv'
+outputFilename = 'IBM_BM011_IdentifiedSplitSites.csv'
 outputDir = os.path.join(folderDir,outputFilename)
 ss_output.to_csv(outputDir)
 

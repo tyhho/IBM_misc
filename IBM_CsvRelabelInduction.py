@@ -10,8 +10,8 @@ import pandas as pd
 # TODO: Specify folder location
 
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC033'
-dataFN = 'IBM_FC033R1,4,5_median&metadata&PRData.csv'
+dataFolderDir = 'FC034'
+dataFN = 'IBM_FC034R1-4_median&metadata&PRData.csv'
 outputFN = dataFN.split('.csv')[0] + '_InductionRelabelled.csv'
 
 dataFP = os.path.join(dataRootDir,dataFolderDir,dataFN)

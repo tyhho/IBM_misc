@@ -26,24 +26,24 @@ sns.reset_defaults
 dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
 
 # TODO: Specify location of CSV file containing identified split sites
-ssFolderDir1 = 'BM010'
+ssFolderDir1 = 'BM011'
 ssFolderDir2 = 'Sequencing Results'
-ssDataFN = 'IBM_BM010_IdentifiedSplitSites.csv'
+ssDataFN = 'IBM_BM011_IdentifiedSplitSites.csv'
 
 # TODO: Specify location of CSV file containing the median fluorescence values of the strains
-fluoFolderDir='FC033'
-fluoDataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled.csv'
+fluoFolderDir='FC034'
+fluoDataFN = 'IBM_FC034R1-4_median&metadata&PRData_InductionRelabelled_Filtered.csv'
 
 # TODO: Specify location of CSV file containing the median fluorescence values of control strains
-ctrlFluoDataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled_Stats.csv'
+ctrlFluoDataFN = 'IBM_FC034R1-4_median&metadata&PRData_InductionRelabelled_FilteredStats.csv'
 
 # TODO: Specify filename to be saved. Figure will be saved under path of dataRootDir\ssFolderDir1
-figName = 'IBM_BM010_BisectionMap_Raw.pdf'
+figName = 'IBM_BM011_BisectionMap_Raw_5hr_zoomed_Jpred_model.pdf'
 
 # TODO: Specify filename of csv with merged data to be saved (final data saves under BM005 directly)
-mergedDataFN = 'IBM_BM010_PooledResults.csv'
+mergedDataFN = 'IBM_BM011_PooledResults.csv'
 
-hlineInfoFN = 'IBM_FC033R1,4,5_median&metadata&PRData_hlineInfo.csv'
+hlineInfoFN = 'IBM_FC034R1-4_median&metadata&PRData_hlineInfo.csv'
 
 # Preparations
 
@@ -55,37 +55,60 @@ pi_times = [5,24]
 # TODO: Update control list
 # control_list = ['IBMc101',
 #         'IBMc307']
+# BM010
+# control_list = ['IBMc186 + IBMc101',
+#                 'IBMc120 + IBMc101',
+#                 'IBMc120 + IBMc071'
+#                 ]
+
+# BM011
 control_list = ['IBMc186 + IBMc101',
-                'IBMc120 + IBMc101',
-                'IBMc120 + IBMc071'
+                'IBMc330 + IBMc101',
+                'IBMc330 + IBMc329'
                 ]
 
+
 # TODO: Set x tick labels of controls
-ctrl_tick_labels = ['background','reporter','ECF20']
+ctrl_tick_labels = ['background','reporter','reporter + SrpR']
 # ctrl_tick_labels = ['background','M86']
 
 # TODO: Define how many amino acids are being plotted
+
+# BM010
+# start_aa = 1
+# end_aa = 193
+
+# BM011
 start_aa = 1
-end_aa = 193
+end_aa = 213
 
 # TODO: Input transposition window
 # n_trans_border = 7
 # c_trans_border = 148
-n_trans_border = 6
-c_trans_border = 188
+n_trans_border = 23
+c_trans_border = 192
 
 # TODO: Decide color for inductions
 # color_mapper = {
 #         '+ 10 μM 4-HT':'#F96495',
 #         '+ DMSO':'#1D1D1B' 
 #         }
+
+# BM010 / FC033
+# color_mapper = {
+#         'no induction':'#1D1D1B',
+#         '1 mM arabinose':'#55A0FB',
+#         '25 μM DAPG':'#099963',
+#         '1 mM arabinose + 25 μM DAPG':'#F96495' ,
+#         }
+
+# BM011 / FC034
 color_mapper = {
-        'no induction':'#1D1D1B',
+        'no induction': '#F96495',
         '1 mM arabinose':'#55A0FB',
         '25 μM DAPG':'#099963',
-        '1 mM arabinose + 25 μM DAPG':'#F96495' ,
+        '1 mM arabinose + 25 μM DAPG':'#1D1D1B'
         }
-
 
 #%%
 '''Read data and map split sites to function'''
@@ -264,15 +287,30 @@ for row_ax_ID in [1,2]:
     ax[row_ax_ID,0].set_xticklabels('')
     ax[row_ax_ID,0].set_xlabel('')
 
+#%%
+# Extra minor locators (BM011 / FC034)
+minorLogLocator = LogLocator(base=10.0,subs=(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9),numticks=12)
+for j in [0,1]:
+    ax[1,j].yaxis.set_minor_locator(minorLogLocator)
+
+#%%
 # ax[1,0].set_ylim(1e2, 1.5e3)
 # ax[1,1].set_ylim(1e2, 1.5e3)
 # ax[2,0].set_ylim(1e2, 1e4)
 # ax[2,1].set_ylim(1e2, 1e4)
 
-ax[1,0].set_ylim(1e2, 1e5)
-ax[1,1].set_ylim(1e2, 1e5)
-ax[2,0].set_ylim(1e2, 1e5)
-ax[2,1].set_ylim(1e2, 1e5)
+# BM010/ FC033
+# ax[1,0].set_ylim(1e2, 1e5)
+# ax[1,1].set_ylim(1e2, 1e5)
+# ax[2,0].set_ylim(1e2, 1e5)
+# ax[2,1].set_ylim(1e2, 1e5)
+
+
+# BM011 / FC034
+ax[1,0].set_ylim(3e3, 4e4)
+ax[1,1].set_ylim(3e3, 4e4)
+ax[2,0].set_ylim(1e2, 4e4)
+ax[2,1].set_ylim(1e2, 4e4)
 
 # Extra customizations to BM fluorescence plots
 for row_ax_ID in [1,2]:
@@ -364,7 +402,7 @@ ax[4,1] = plt.subplot(gs[4,1])
 
 #%% Used if 3D structure is not available and secondary structure inferred from model
 
-exported_ss_path = os.path.join(dataRootDir,ssFolderDir1,'ECF20_structure_model','ECF20_ExPASy_sec_struct.csv')
+exported_ss_path = os.path.join(dataRootDir,ssFolderDir1,'SrpR_structure_model','SrpR_Jpred_sec_struct.csv')
 
 annotation = ssp.ss_csv_to_annotation(csv_path=exported_ss_path)
 
@@ -372,7 +410,8 @@ graphics.plot_feature_map(
     ax[4,1], annotation, multi_line=False,
     show_numbers=False, show_line_position=False,
     # 'loc_range' takes exclusive stop -> length+1 is required
-    loc_range=(1,194),
+    # loc_range=(1,194), # BM010
+    loc_range=(1,214), # BM011
     feature_plotters=[ssp.HelixPlotter(), ssp.SheetPlotter()]
 )
 
@@ -381,6 +420,6 @@ graphics.plot_feature_map(
 # Make room for plot at the bottom
 plt.gcf().subplots_adjust(hspace=0.15, wspace=0.1)
 
-'''Save Figure'''
+# Save Figure
 outputDir = os.path.join(dataRootDir,ssFolderDir1,figName)
 fig.savefig(outputDir)

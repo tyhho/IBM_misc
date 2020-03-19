@@ -13,8 +13,8 @@ import pandas as pd
     # csv file containing data to be plotted should be in this folder
 
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC033'
-dataFN = 'IBM_FC033R1,4,5_median&metadata&PRData_InductionRelabelled.csv'
+dataFolderDir='FC034'
+dataFN = 'IBM_FC034R1-4_median&metadata&PRData_InductionRelabelled.csv'
 statFN = dataFN.split('.csv')[0] + '_Stats.csv'
 
 # TODO: Set induction and induction time information
@@ -52,13 +52,32 @@ stat_data.to_csv(outputDataFP)
 # Single out criteria for filtering
 
 pi24_data = stat_data[(stat_data['Post-induction (hrs)'] ==24) & (stat_data['Induction'] == '1 mM arabinose + 25 μM DAPG')]
-pi24_data['cv'] = pi24_data['std of median fluorescence (a.u.)'] / pi24_data['mean of median fluorescence (a.u.)']
+pi24_data = pi24_data[pi24_data['SampleID'].str.contains("IBMs")]
+pi24_data['cv'] = pi24_data.loc[:,('std of median fluorescence (a.u.)')] / pi24_data.loc[:,('mean of median fluorescence (a.u.)')]
 
-cv_threshold = 0.4
-all_samples_to_drop = []
-data_to_drop = pi24_data[pi24_data['cv'] > cv_threshold]
-samples_to_drop = data_to_drop['SampleID'].to_list()
+fc_data_induced = stat_data[(stat_data['Post-induction (hrs)'] ==24) & (stat_data['Induction'] == '1 mM arabinose + 25 μM DAPG')]
+fc_data_induced = fc_data_induced[['SampleID','mean of median fluorescence (a.u.)']]
+fc_data_induced.rename(columns={'mean of median fluorescence (a.u.)':'induced'}, inplace=True)
 
+fc_data_uninduced = stat_data[(stat_data['Post-induction (hrs)'] ==24) & (stat_data['Induction'] == 'no induction')]
+fc_data_uninduced = fc_data_uninduced[['SampleID','mean of median fluorescence (a.u.)']]
+fc_data_uninduced.rename(columns={'mean of median fluorescence (a.u.)':'uninduced'}, inplace=True)
+
+fc_data_withCtrl = fc_data_induced.merge(fc_data_uninduced, left_on='SampleID', right_on='SampleID')
+fc_data = fc_data_withCtrl[fc_data_withCtrl['SampleID'].str.contains("IBMs")]
+fc_data['fold_change'] = fc_data.loc[:,('uninduced')] / fc_data.loc[:,('induced')]
+
+fold_change_threshold = 2
+cv_threshold = 0.3
+
+#%%
+data_to_drop_cv = pi24_data.query(f'cv > {cv_threshold}')
+
+data_to_drop_fc = fc_data.query(f'fold_change < {fold_change_threshold}')
+
+samples_to_drop = data_to_drop_cv['SampleID'].to_list() + data_to_drop_fc['SampleID'].to_list()
+
+#%%
 filtered_stat_data =  stat_data[~(stat_data['SampleID'].isin(samples_to_drop))]
 filtered_stat_data.reset_index(drop=True, inplace=True)
 

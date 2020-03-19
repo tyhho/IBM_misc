@@ -13,8 +13,8 @@ import pandas as pd
     # csv file containing data to be plotted should be in this folder
 
 dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC033'
-dataFN = 'IBM_FC033R1,4,5_median&metadata&PRData.csv'
+dataFolderDir='FC034'
+dataFN = 'IBM_FC034R1-4_median&metadata&PRData.csv'
 hlineInfoFN = dataFN.split('.csv')[0] + '_hlineInfo.csv'
 
 # Read data
@@ -29,8 +29,14 @@ data = pd.read_csv(dataFP,index_col=0)
 hline_input = {
         # 'SampleID == "IBMc307"': ['#F96495','#EDA3BA'],
         # 'SampleID == "IBMc101"': ['k','#E8E8E8']
-        'SampleID == "IBMc120 + IBMc101"': ['k','#E8E8E8'],
-        'SampleID == "IBMc120 + IBMc071" & `arabinose (mM)` == 1': ['#F96495','#EDA3BA'],
+    
+        # For BM010 / FC033
+        # 'SampleID == "IBMc120 + IBMc101"': ['k','#E8E8E8'],
+        # 'SampleID == "IBMc120 + IBMc071" & `arabinose (mM)` == 1': ['#F96495','#EDA3BA'],
+    
+        # For BM011 / FC034
+        'SampleID == "IBMc330 + IBMc101"': ['#F96495','#EDA3BA'],
+        'SampleID == "IBMc330 + IBMc329" & `arabinose (mM)` == 1':  ['k','#E8E8E8'],
         }
 
 #%% Calculate stats for hlines
