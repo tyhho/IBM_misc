@@ -18,25 +18,25 @@ from FlowCytometryTools import ThresholdGate, FCPlate
 
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
-dataRootDir = r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir = 'FC034'
+dataRootDir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), os.pardir))
+dataFolderDir = 'FC035'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_fn = 'IBM_FC034R1-5_PRData'
+# pr_data_fn = 'IBM_FC034R1-5_PRData'
 #pr_data_filename = 'IBM_FC021R2-7_Finalized_PRData.csv'
 
 # TODO: Specify the output filename for the combined data
-all_doi_fn = 'IBM_FC034R1-4_median&metadata&PRData'
+# all_doi_fn = 'IBM_FC035R1_median&metadata&PRData'
 
 # TODO: Specify metadata file core
-metadatafnCore = 'PRMD_IBM_FC034'
+metadatafnCore = 'PRMD_IBM_FC035R1'
 
 #%%
 # TODO: Specify folder sequence for processing
 
 coreSearchSeqList = [
-        'IBM_FC034R[2-4]*P1_FCS',
-        'IBM_FC034R[1-3]*P[2-5]_FCS',
+        'IBM_FC035R1PI24P[1,2,4]_FCS',
+        # 'IBM_FC034R[1-3]*P[2-5]_FCS',
 #            'IBM_FC033R[1,4,5]PI*_FCS',
 #            'IBM_FC021R[2,3,4]*P2_FCS',
 #            'IBM_FC021R[2-7]*_FCS'
@@ -105,7 +105,7 @@ for coreSearchSeq in coreSearchSeqList:
         doi_dict = {well[0]: [well[1].data['RFP2-H'].median(),well[1].counts] \
                                       for well in plate.items()}    
         
-        del plate # delete var "plate" because it is taking too much space
+        # del plate # delete var "plate" because it is taking too much space
         
         # Create df from data of interest
         doi_df = pd.DataFrame.from_dict(doi_dict,orient='index',columns=['median fluorescence (a.u.)','Count'])
