@@ -18,9 +18,9 @@ import IBM_CustomFunctions as cf
 import fnmatch
 
 # TODO: Specify folder location
-dataRootDir=r'W:\Data storage & Projects\PhD Project_Trevor Ho\3_Intein-assisted Bisection Mapping'
-dataFolderDir='FC034'
-outputCSV = 'IBM_FC034R1-5_PRData.csv'
+root_path = '..'
+data_folder = 'FC007'
+output_fn = 'IBM_FC007R1-3_PRData.csv'
 # outputCSV = 'IBM_FC033R1,4,5_PRData.csv'
 
 
@@ -30,8 +30,8 @@ outputCSV = 'IBM_FC034R1-5_PRData.csv'
 # TODO: Use master_blank_info if all files use the same blank info
 master_blank_info = []    #provide fn and well location of where the blank should be
 alldata = pd.DataFrame(columns = [])
-folderDir = os.path.join(dataRootDir, dataFolderDir)
-allFiles = os.listdir(folderDir)
+data_path = os.path.join(root_path, data_folder)
+allFiles = os.listdir(data_path)
 
 #%% Strategy 1
 
@@ -59,7 +59,7 @@ for fnSearchSeq, metaInfo in fileList.items():
 
     # Get metadata
     metafn = metaInfo[0]
-    metadataDir = os.path.join(dataRootDir,dataFolderDir,metafn)
+    metadataDir = os.path.join(root_path, data_folder, metafn)
     metadata_df = cf.metadata_to_metadf(metadataDir)
     
     # Try to get 'Blank' from metadatafile
@@ -166,13 +166,13 @@ for fnSearchSeq, metaInfo in fileList.items():
 # For everyfile pattern that matches the filename, look for corresponding metadatafile and blank excel file
 
 # metadatafnCore = 'PRMD_IBM_FC029R4'
-metadatafnCore = 'PRMD_IBM_FC034'
-blank_well = 'B02'
+metadatafnCore = 'PRMD_IBM_FC007'
+blank_well = 'F08'
 blank_plate = '1'
 
 fnSearchSeqList = [
-            'PR_IBM_FC034R[2-4]*P1.xlsx',
-            'PR_IBM_FC034R[1-3]*P[2-5].xlsx',
+            'PR_IBM_FC007R[1-3]*.xlsx',
+            # 'PR_IBM_FC034R[1-3]*P[2-5].xlsx',
 #            'PR_IBM_FC021R[2,3,4]*P2.xlsx',
 #            'PR_IBM_FC021R[3,4,5]*P3.xlsx',
 #            'PR_IBM_FC021R[4,6,7]*P4.xlsx'
@@ -201,14 +201,14 @@ for fnSearchSeq in fnSearchSeqList:
     for matchedfn in matchedFiles:
         
         # Get metadata
-        metafn = cf.findMetaXlsx(matchedfn,metadatafnCore)
-        metadataDir = os.path.join(dataRootDir,dataFolderDir,metafn)
+        metafn = cf.findMetaXlsx(matchedfn, metadatafnCore)
+        metadataDir = os.path.join(root_path, data_folder, metafn)
         metadata_df = cf.metadata_to_metadf(metadataDir)
         
         # Get blank info
         # If not, assume everything is ok and continue to extract blank info
         blankFN = cf.findBlankXlsx(matchedfn, blank_plate) #get filename using custom function
-        blankDir = os.path.join(dataRootDir, dataFolderDir,blankFN)
+        blankDir = os.path.join(root_path, data_folder, blankFN)
         dataInBlank = pd.read_excel(blankDir,sheet_name = 'End point',index_col=0,skiprows=12)
         dataInBlank = dataInBlank.drop(['Content'], axis=1)
     
@@ -219,8 +219,8 @@ for fnSearchSeq in fnSearchSeqList:
         del blankFN, blankDir, dataInBlank,blankIndex
         
         # Read datas
-        dataDir = os.path.join(dataRootDir, dataFolderDir,matchedfn)
-        data = pd.read_excel(dataDir,sheet_name = 'End point',index_col=0,skiprows=12)
+        dataDir = os.path.join(root_path, data_folder, matchedfn)
+        data = pd.read_excel(dataDir, sheet_name = 'End point', index_col=0, skiprows=12)
         data = data.drop(['Content'], axis=1)
         
         # Update the index so it matches the conventional nomenclature
@@ -326,9 +326,8 @@ Strategy:
 
 # %%
 # Save file as CSV
-csvDir = os.path.join(folderDir,outputCSV)
-alldata.to_csv(csvDir)
+output_csv_path = os.path.join(data_path, output_fn)
+alldata.to_csv(output_csv_path)
 
-json_fn = outputCSV[:-4] + ".json"
-json_path = os.path.join(folderDir,json_fn)
+json_path = output_csv_path.split(".csv")[0] + ".json"
 alldata.to_json(json_path)
