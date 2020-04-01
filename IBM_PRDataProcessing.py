@@ -46,10 +46,12 @@ allFiles = os.listdir(data_path)
             # if 'filename' here is given as 'customFunction', then it will call the findBlankXlsx function to look for the blank
         # Having a blank info will force the script to use the blank given instead of the blank in metadata file
     
-fileList = {'PR_IBM_FC033R[1,4,5]*P1.xlsx': ['PRMD_IBM_FC033P1.xlsx'],
-            'PR_IBM_FC033R[1,4,5]*P2.xlsx': ['PRMD_IBM_FC033P2.xlsx'],
-            'PR_IBM_FC033R[1,4,5]*P3.xlsx': ['PRMD_IBM_FC033P3.xlsx'],
-            'PR_IBM_FC033R[1,4,5]*P4.xlsx': ['PRMD_IBM_FC033P4.xlsx']
+fileList = {
+            'PR_IBM_FC007R[4,5,7]*P1.xlsx': ['PRMD_IBM_FC007R4P1.xlsx'],
+            # 'PR_IBM_FC033R[1,4,5]*P1.xlsx': ['PRMD_IBM_FC033P1.xlsx'],
+            # 'PR_IBM_FC033R[1,4,5]*P2.xlsx': ['PRMD_IBM_FC033P2.xlsx'],
+            # 'PR_IBM_FC033R[1,4,5]*P3.xlsx': ['PRMD_IBM_FC033P3.xlsx'],
+            # 'PR_IBM_FC033R[1,4,5]*P4.xlsx': ['PRMD_IBM_FC033P4.xlsx']
             }
 
 
@@ -73,16 +75,16 @@ for fnSearchSeq, metaInfo in fileList.items():
         if type(blankInfo) != list or len(blankInfo) != 2:
             raise ValueError('Blank Info should be a list with 1st item as filename and 2nd item as well location')
         # If not, assume everything is ok and continue to extract blank info
-        blankFN = blankInfo[0] # extract filename containing blank
-        blankDir = os.path.join(dataRootDir, dataFolderDir,blankFN)
-        dataInBlank = pd.read_excel(blankDir,sheet_name = 'End point',index_col=0,skiprows=12)
+        blank_fn = blankInfo[0] # extract filename containing blank
+        blank_file_path = os.path.join(root_path, data_folder, blank_fn)
+        dataInBlank = pd.read_excel(blank_file_path, sheet_name = 'End point', index_col=0, skiprows=12)
         dataInBlank = dataInBlank.drop(['Content'], axis=1)
 
         blankIndex = dataInBlank.index.get_loc(blankInfo[1])
         blankOD = dataInBlank.iloc[blankIndex][0]  #extract blank OD
         blankRF = dataInBlank.iloc[blankIndex][1]  #extract blank red fluorescence
         
-        del blankFN, blankDir, dataInBlank,blankIndex
+        del blank_fn, blank_file_path, dataInBlank, blankIndex
         useBlankInSelf = False
         
     except IndexError:
@@ -91,14 +93,14 @@ for fnSearchSeq, metaInfo in fileList.items():
             raise ValueError('No \'Blank\' present in metadata. Blank Info needed')
             
     # Get all files that match the search criteria
-    matchedFiles = fnmatch.filter(allFiles,fnSearchSeq)
+    matched_files = fnmatch.filter(allFiles,fnSearchSeq)
     
     # Process each file
-    for matchedfn in matchedFiles:
+    for matched_fn in matched_files:
         
         # Read data
-        dataDir = os.path.join(dataRootDir, dataFolderDir,matchedfn)
-        data = pd.read_excel(dataDir,sheet_name = 'End point',index_col=0,skiprows=12)
+        data_path = os.path.join(root_path, data_folder, matched_fn)
+        data = pd.read_excel(data_path, sheet_name = 'End point', index_col=0, skiprows=12)
         data = data.drop(['Content'], axis=1)
         
         # Update the index so it matches the conventional nomenclature
@@ -126,9 +128,12 @@ for fnSearchSeq, metaInfo in fileList.items():
             if from_meta_blank_list:
                 data = data.drop(from_meta_blank_list,axis=0)
         
+            # Calculate Fluo/OD
+            data['PR_Corrected Red Fluo/OD600 (a.u.)'] = data['PR_Corrected Red Fluorescence (a.u.)'] / data['PR_Corrected OD600']
+        
         # Add extra metadata based on info in filename
         # Extract information from filename
-        fnInfo = matchedfn.split('.xlsx')[0][3:]    #Removes 'PR' from filename for downstream analysis
+        fnInfo = matched_fn.split('.xlsx')[0][3:]    #Removes 'PR' from filename for downstream analysis
         run_no = int(fnInfo.split('R')[1][0])
                   
         # Check if induction time and plate no info are in the filename
@@ -233,6 +238,8 @@ for fnSearchSeq in fnSearchSeqList:
         data.rename(columns={'Raw Data (600 1)': 'PR_Corrected OD600',
                              'Raw Data (584 2)': 'PR_Corrected Red Fluorescence (a.u.)'}, inplace=True)
     
+        # Calculate Fluo/OD
+        data['PR_Corrected Red Fluo/OD600 (a.u.)'] = data['PR_Corrected Red Fluorescence (a.u.)'] / data['PR_Corrected OD600']
         
         # Add extra metadata based on info in filename
         # Extract information from filename
@@ -326,7 +333,7 @@ Strategy:
 
 # %%
 # Save file as CSV
-output_csv_path = os.path.join(data_path, output_fn)
+output_csv_path = os.path.join(root_path, data_folder, output_fn)
 alldata.to_csv(output_csv_path)
 
 json_path = output_csv_path.split(".csv")[0] + ".json"

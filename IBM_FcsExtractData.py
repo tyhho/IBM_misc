@@ -22,7 +22,7 @@ dataFolderDir = 'FC007'
 pr_data_filename = 'IBM_FC007R1-3_PRData.json'
 
 # TODO: Specify the output filename for the combined data
-all_doi_filename = 'IBM_FC007R1-3_cyto_&_PR_data.csv'
+json_output_fn = 'IBM_FC007R1-3_cyto_&_PR_data.json'
 
 # TODO: Specify metadata file core
 metadatafnCore = 'PRMD_IBM_FC007'
@@ -31,7 +31,8 @@ metadatafnCore = 'PRMD_IBM_FC007'
 # TODO: Specify folder sequence for processing
 
 coreSearchSeqList = [
-            'IBM_FC007R*_FCS',
+            # 'IBM_FC007R[4,5,7]*_FCS',
+            'IBM_FC007R[1-3]*_FCS',
             # 'IBM_FC021R[2,3,4]*P2_FCS',
             # 'IBM_FC021R[2-7]*_FCS'
             ]
@@ -136,9 +137,8 @@ pr_data = pd.read_json(pr_data_path)
 
 # #%%
 final_df = final_df.merge(pr_data)
-final_df_minus_np = final_df.drop(['FC_fluorescence (a.u.)'], axis=1)
-all_doi_dir = os.path.join(dataRootDir,dataFolderDir,all_doi_filename)
-final_df_minus_np.to_csv(all_doi_dir)
-final_df.to_json((all_doi_dir[:-4]+'.json'))
-
-get_final = pd.read_json((all_doi_dir[:-4]+'.json'))
+json_output_path = os.path.join(dataRootDir, dataFolderDir, json_output_fn)
+final_df.to_json(json_output_path)
+csv_data = final_df.drop(['FC_fluorescence (a.u.)'], axis=1)
+csv_output_path = json_output_path.split('.json')[0] + '.csv'
+csv_data.to_csv(csv_output_path)
