@@ -17,7 +17,7 @@ from matplotlib import pyplot as plt
 
 # TODO: Specify folder location
     # Each folder must contain only fcs files that end with well location
-root_path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), os.pardir))
+root_path = '..'
 data_folder = 'EXP012'
 data_fn = 'IBM_EXP012_annotated_cyto_&_PR_data.json'
 plot_inst_fn = 'IBM_EXP012R1_PlotOrder.csv'
