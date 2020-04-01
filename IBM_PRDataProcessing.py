@@ -20,7 +20,7 @@ import fnmatch
 # TODO: Specify folder location
 root_path = '..'
 data_folder = 'FC007'
-output_fn = 'IBM_FC007R1-3_PRData.csv'
+output_fn = 'IBM_FC007R4,5,7_PRData.csv'
 # outputCSV = 'IBM_FC033R1,4,5_PRData.csv'
 
 

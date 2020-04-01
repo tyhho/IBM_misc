@@ -19,20 +19,20 @@ dataRootDir = '..'
 dataFolderDir = 'FC007'
 
 # TODO: Specify the source of plate reader data to merge with flow cytometry data
-pr_data_filename = 'IBM_FC007R1-3_PRData.json'
+pr_data_filename = 'IBM_FC007R4,5,7_PRData.json'
 
 # TODO: Specify the output filename for the combined data
-json_output_fn = 'IBM_FC007R1-3_cyto_&_PR_data.json'
+json_output_fn = 'IBM_FC007R4,5,7_cyto_&_PR_data.json'
 
 # TODO: Specify metadata file core
-metadatafnCore = 'PRMD_IBM_FC007'
+metadatafnCore = 'PRMD_IBM_FC007R4'
 
 #%%
 # TODO: Specify folder sequence for processing
 
 coreSearchSeqList = [
-            # 'IBM_FC007R[4,5,7]*_FCS',
-            'IBM_FC007R[1-3]*_FCS',
+            'IBM_FC007R[4,5,7]*_FCS',
+            # 'IBM_FC007R[1-3]*_FCS',
             # 'IBM_FC021R[2,3,4]*P2_FCS',
             # 'IBM_FC021R[2-7]*_FCS'
             ]
