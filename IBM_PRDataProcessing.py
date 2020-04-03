@@ -14,7 +14,7 @@ the Run number, the SampleID and the condition
 
 import os
 import pandas as pd
-import IBM_CustomFunctions as cf
+import CustomFunctions as cf
 import fnmatch
 
 # TODO: Specify folder location
@@ -272,64 +272,6 @@ for fnSearchSeq in fnSearchSeqList:
         alldata = alldata.append(data,ignore_index=True,sort=None)
     
 alldata = alldata[alldata['SampleID'] != 'Blank']
-
-#%%
-'''
-Note: this strategy is deprecated because it only works when mapping many PR files to one metadata file.
-Strategy: 
-    Loop through every single file starting with 'PR', check if filename contains the key
-    If yes, process it and map the metadata onto it
-
-'''
-#
-#keylist = [
-#        'FC015R1PI5+18'        
-#           ]
-#
-#for file in os.listdir(folderDir):
-#     filename = os.fsdecode(file)
-#
-#     if filename.endswith(".xlsx") and filename.split('_')[0] == 'PR' \
-#     and (not keylist or any(key in filename for key in keylist)):
-#         
-#         # Read Excel file
-#         excelDir = os.path.join(folderDir,filename)
-#         data = pd.read_excel(excelDir,sheet_name = 'End point',index_col=0,skiprows=12)
-#         data = data.drop(['Content','Raw Data (600 1)','Raw Data (584 2)'], axis=1)
-#         
-#         # Update the index so it matches the conventional nomenclature
-#         data = cf.renameDfWellIndex(data)
-#         
-#         # Extract information from filename
-#         filename = filename.split('.xlsx')[0][3:]    #Removes 'PR' from filename for downstream analysis
-#         
-#         run_no = int(filename.split('R')[1][0])
-#                  
-#         # Check if induction time and plate no info are in the filename
-#         if filename.find('PI')>=0:
-#             ind_time_frag = filename.split('PI')[1]
-#             if ind_time_frag.find('P') >=0:
-#                 ind_time, plate_no = ind_time_frag.split('P')[0], ind_time_frag.split('P')[1]
-#             else:
-#                 ind_time = ind_time_frag
-#         elif filename.find('P') >=0:
-#             plate_no = int(filename.split('P')[1])
-#         
-#         
-#         data.rename(columns={'Blank corrected based on Raw Data (600 1)': 'PR_Corrected OD600',
-#                              'Blank corrected based on Raw Data (584 2)': 'PR_Corrected Fluo (a.u.)',
-#                              'RF/OD600': 'PR_Corrected Red Fluo/OD600 (a.u.)'}, inplace=True)
-#         data['Run'] = run_no
-#         ind_time = int(ind_time)   #comment out in case induction time needs to be a special string instead of interger
-#         data['Post-induction (hrs)'] = ind_time
-#         data = data.merge(metadata_df,left_index=True,right_index=True)
-#         
-#         # TODO: Check that blank info is in metadata excel file
-#         blank_list = data.index[data['SampleID']=='Blank'].tolist()
-#         data = data.drop(blank_list,axis=0)
-#         
-#         data['PR_Well'] = data.index
-#         alldata = alldata.append(data,ignore_index=True,sort=None)
 
 # %%
 # Save file as CSV

@@ -36,8 +36,8 @@ def metadata_to_metaDict(metadataDir):
             indexList = metadf_96_row.index.tolist()
             for columnIndex in range(len(indexList)):
                 indexList[columnIndex] = char + str(indexList[columnIndex])
-            metadf_96_row['Well']=indexList
-            metadf_96_row.set_index('Well', inplace=True)
+            metadf_96_row['well']=indexList
+            metadf_96_row.set_index('well', inplace=True)
             
             # Append to major dataframe of the single metadata
             metadf = metadf.append(metadf_96_row,sort=False)
@@ -74,7 +74,7 @@ def findBlankXlsx(fn=str, blankPlate=str):
     blankFN =  fnCore + blankPlate + '.xlsx'
     return blankFN
 
-def findMetaXlsx(fn=str, metaCore=str):
+def find_meta_xlsx(fn=str, metaCore=str):
     '''Read filename of excel file of plate reader data and returns the corresponding metadata file'''    
     fn = fn.replace('PI','')
     try:

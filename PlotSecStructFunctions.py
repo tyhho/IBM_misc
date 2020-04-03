@@ -175,5 +175,4 @@ def fetch_gb_annotation(pdb_chain=str):
     gb_file = gb.GenBankFile()
     gb_file.read(file_name)
     annotation = gb.get_annotation(gb_file, include_only=["SecStr"])
-    # Length of the sequence
-    _, length, _, _, _, _ = gb.get_locus(gb_file)
+    return annotation
