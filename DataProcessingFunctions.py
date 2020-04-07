@@ -500,8 +500,10 @@ def json_cal_stats(root_path: str, expt_folder: str,
                     'std of median fluorescence (a.u.)': sub_data['FC_median fluorescence (a.u.)'].std(),
                     'median fluorescence (a.u.)': np.median(fluo),
                     'rSD (a.u.)':stats.median_absolute_deviation(fluo),
+                    'fluorescence/OD (a.u.)':[sub_data['PR_corrected fluorescence/OD600 (a.u.)'].to_list()],
                     'mean of fluorescence/OD (a.u.)': sub_data['PR_corrected fluorescence/OD600 (a.u.)'].mean(),
                     'std of fluorescence/OD (a.u.)': sub_data['PR_corrected fluorescence/OD600 (a.u.)'].std(),
+                    'OD': [sub_data['PR_corrected OD600'].to_list()],
                     'mean of OD': sub_data['PR_corrected OD600'].mean(),
                     'std of OD': sub_data['PR_corrected OD600'].std()
                     })
